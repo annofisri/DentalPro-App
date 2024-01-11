@@ -34,7 +34,7 @@ class _NotificationPageState extends State<NotificationPage> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(54, 135, 147, 1),
         title: const Text(
-          'Dashboard',
+          'Notification',
           style: TextStyle(
               fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
         ),
@@ -61,7 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           Container(
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Color.fromRGBO(54, 135, 147, 1),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     topRight: Radius.circular(10))),
@@ -76,22 +76,28 @@ class _NotificationPageState extends State<NotificationPage> {
                               Container(
                                   child: Html(
                                       data: notificationData[index]['body'])),
-                              FutureBuilder<Uint8List>(
-                                future: Notificationservice()
-                                    .fetchNoticeBlobImage(
-                                        notificationData[index]['image_name']),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Text('loading');
-                                  } else if (snapshot.hasError) {
-                                    print('Error: ${snapshot.error}');
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    return Image.memory(snapshot.data!);
-                                  }
-                                },
-                              )
+                              notificationData[index]['image_name'] == null ||
+                                      notificationData[index]['image_name'] ==
+                                          ''
+                                  ? Text('')
+                                  : FutureBuilder<Uint8List>(
+                                      future: Notificationservice()
+                                          .fetchNoticeBlobImage(
+                                              notificationData[index]
+                                                  ['image_name']),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Text('loading');
+                                        } else if (snapshot.hasError) {
+                                          print('Error: ${snapshot.error}');
+                                          return Text(
+                                              'Error: ${snapshot.error}');
+                                        } else {
+                                          return Image.memory(snapshot.data!);
+                                        }
+                                      },
+                                    )
                             ],
                           )
                         ]),

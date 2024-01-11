@@ -143,7 +143,7 @@ class _NavDrawerState extends State<NavDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.home),
+            leading: Icon(Icons.calendar_month),
             title: Text("Appointment"),
             onTap: () {
               Navigator.pop(context);
