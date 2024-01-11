@@ -38,6 +38,12 @@ class _HomePageState extends State<HomePage> {
     print('7days');
   }
 
+  void setSelectedDay(day) {
+    setState(() {
+      selectedDay = day;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +64,9 @@ class _HomePageState extends State<HomePage> {
                 itemCount: next7Days.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Container(
+                  return GestureDetector(
+                    onTap: () => setSelectedDay(next7Days[index]),
+                    child: Container(
                       color: selectedDay == next7Days[index]
                           ? Colors.orange
                           : Colors.black,
@@ -69,7 +77,9 @@ class _HomePageState extends State<HomePage> {
                           next7Days[index],
                           style: TextStyle(color: Colors.white),
                         ),
-                      ));
+                      ),
+                    ),
+                  );
                 })
             : Text('Something went wrong!'),
       ),
