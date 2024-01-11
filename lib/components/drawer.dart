@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'package:dental/pages/appointment.dart';
@@ -70,21 +71,32 @@ class _NavDrawerState extends State<NavDrawer> {
   getUserImage() async {}
 
   Future<Uint8List> fetchBlobImage() async {
-    String imageUrl = 'http://182.93.83.242:9002/master/profilePics/22';
-    var token = activeUser['token'];
-    print(token);
-    final response = await http.get(
-      Uri.parse(imageUrl),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": 'Bearer $token'
-      },
-    );
-    print(response.body);
-    if (response.statusCode == 200) {
-      return Uint8List.fromList(utf8.encode(response.body));
-    } else {
-      throw Exception('Failed to load blob image');
+    final Uint8List error = Uint8List(10);
+
+    String apiUrl =
+        'https://anurodh.com.np/test/blobImage.php'; // Replace with your API endpoint
+
+    try {
+      http.Response response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Successful API request
+        Uint8List responseData = Uint8List.fromList(response.bodyBytes);
+
+        // Handle the binary data as needed
+        // For example, you can save it to a file, display an image, etc.
+        // Here, we're just printing the first 10 bytes as an example
+        print(
+            'First 10 bytes of the binary response: ${responseData.sublist(0, 10)}');
+        return responseData;
+      } else {
+        // Handle errors
+        print('Error: ${response.statusCode} - ${response.reasonPhrase}');
+        return error;
+      }
+    } catch (err) {
+      print('Error: $err');
+      return error;
     }
   }
 
@@ -128,7 +140,9 @@ class _NavDrawerState extends State<NavDrawer> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  activeUser != null ? '${activeUser['name']}' : 'Sandip Shakya', // User name
+                  activeUser != null
+                      ? '${activeUser['name']}'
+                      : 'Sandip Shakya', // User name
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -161,12 +175,12 @@ class _NavDrawerState extends State<NavDrawer> {
             leading: Icon(Icons.home),
             title: Text("Appointment"),
             onTap: () {
-              // Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => AppointmentPage()),
-              // );
-              getUserImage();
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AppointmentPage()),
+              );
+              // getUserImage();
             },
           ),
           ListTile(
@@ -183,7 +197,9 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           ListTile(
             title: Text(
-              activeUser != null ? '${activeUser['image'].toString()}' : 'Sandip Shakya', // User name
+              activeUser != null
+                  ? '${activeUser['image'].toString()}'
+                  : 'Sandip Shakya', // User name
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,

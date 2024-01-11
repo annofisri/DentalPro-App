@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // checkUser();
+    checkUser();
   }
 
   checkUser() async {
@@ -40,10 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    final data = {
-      "username": username.text,
-      "password": password.text
-    };
+    final data = {"username": username.text, "password": password.text};
 
     var response = await authService.login(data, url.text);
 
@@ -130,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Color.fromRGBO(54, 135, 147, 1),
         title: const Text(
           'DPMS',
-          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         elevation: 0,
         automaticallyImplyLeading: false,
