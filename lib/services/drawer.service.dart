@@ -24,10 +24,6 @@ class DrawerService {
     String apiUrl =
         '$api/master/profilePics/2'; // Replace with your API endpoint
 
-    print(userList);
-    print(api);
-    print('$api/master/profilePics/2');
-
     try {
       http.Response response = await http.get(Uri.parse(apiUrl), headers: {
         "Content-Type": "application/json",

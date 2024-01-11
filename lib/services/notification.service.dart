@@ -22,7 +22,8 @@ class Notificationservice {
       Uri.parse('$api/notice/getNotice'),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": 'Bearer $token'
+        "Authorization": 'Bearer $token',
+        "origin": "http://182.93.83.242:5002"
       },
     );
     print(response.body);
