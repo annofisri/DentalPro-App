@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dental/components/drawer.dart';
 import 'package:dental/services/notification.service.dart';
 import 'package:flutter/material.dart';
@@ -69,9 +71,29 @@ class _NotificationPageState extends State<NotificationPage> {
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          Container(
-                              child:
-                                  Html(data: notificationData[index]['body']))
+                          Column(
+                            children: [
+                              Container(
+                                  child: Html(
+                                      data: notificationData[index]['body'])),
+                              FutureBuilder<Uint8List>(
+                                future: Notificationservice()
+                                    .fetchNoticeBlobImage(
+                                        notificationData[index]['image_name']),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Text('loading');
+                                  } else if (snapshot.hasError) {
+                                    print('Error: ${snapshot.error}');
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return Image.memory(snapshot.data!);
+                                  }
+                                },
+                              )
+                            ],
+                          )
                         ]),
                   );
                 },
