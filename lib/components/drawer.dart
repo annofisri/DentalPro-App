@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:dental/pages/notification.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'package:dental/pages/appointment.dart';
@@ -9,8 +9,8 @@ import 'package:dental/services/auth.service.dart';
 import 'package:flutter/material.dart';
 import 'package:dental/pages/login.dart';
 import 'package:dental/pages/home.dart';
+import 'package:dental/pages/notification.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -82,12 +82,6 @@ class _NavDrawerState extends State<NavDrawer> {
       if (response.statusCode == 200) {
         // Successful API request
         Uint8List responseData = Uint8List.fromList(response.bodyBytes);
-
-        // Handle the binary data as needed
-        // For example, you can save it to a file, display an image, etc.
-        // Here, we're just printing the first 10 bytes as an example
-        print(
-            'First 10 bytes of the binary response: ${responseData.sublist(0, 10)}');
         return responseData;
       } else {
         // Handle errors
@@ -179,6 +173,18 @@ class _NavDrawerState extends State<NavDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AppointmentPage()),
+              );
+              // getUserImage();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.notifications_active),
+            title: Text("Notification"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
               );
               // getUserImage();
             },

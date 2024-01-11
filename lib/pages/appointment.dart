@@ -210,7 +210,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                   ]),
                             );
                           })
-                      : Text('no data')),
+                      : Center(child: Text('no data'))),
             ],
           )),
       drawer: NavDrawer(),
