@@ -33,6 +33,20 @@ class _PatientPageState extends State<PatientPage> {
     });
   }
 
+  getPreviousPage() {
+    setState(() {
+      currentPage = currentPage - 1;
+    });
+    getAllPatients();
+  }
+
+  getNextPage() {
+    setState(() {
+      currentPage = currentPage + 1;
+    });
+    getAllPatients();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +161,7 @@ class _PatientPageState extends State<PatientPage> {
               children: [
                 first == false
                     ? GestureDetector(
-                        onTap: getAllPatients,
+                        onTap: getPreviousPage,
                         child: Container(
                           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                           decoration: BoxDecoration(
@@ -161,7 +175,7 @@ class _PatientPageState extends State<PatientPage> {
                     : Text(''),
                 last == false
                     ? GestureDetector(
-                        onTap: getAllPatients,
+                        onTap: getNextPage,
                         child: Container(
                           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                           decoration: BoxDecoration(
