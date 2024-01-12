@@ -48,10 +48,10 @@ class _PatientPageState extends State<PatientPage> {
     getAllPatients();
   }
 
-  goToPatientDetailsPage(id) {
+  goToPatientDetailsPage(patient) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PatientDetailsPage(id)),
+      MaterialPageRoute(builder: (context) => PatientDetailsPage(patient)),
     );
   }
 
@@ -114,8 +114,7 @@ class _PatientPageState extends State<PatientPage> {
                     itemCount: patientData.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () =>
-                            goToPatientDetailsPage(patientData[index]['id']),
+                        onTap: () => goToPatientDetailsPage(patientData[index]),
                         child: Container(
                           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Card(

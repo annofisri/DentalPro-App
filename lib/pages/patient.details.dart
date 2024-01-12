@@ -8,8 +8,8 @@ import 'package:dental/pages/patient.profile.dart';
 import 'package:flutter/material.dart';
 
 class PatientDetailsPage extends StatefulWidget {
-  final int id;
-  const PatientDetailsPage(this.id, {super.key});
+  final Object patient;
+  const PatientDetailsPage(this.patient, {super.key});
 
   @override
   State<PatientDetailsPage> createState() => _PatientDetailsPageState();
@@ -21,7 +21,6 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
   @override
   void initState() {
     super.initState();
-    print(widget.id);
   }
 
   setActiveNav(nav) {
@@ -158,7 +157,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                               ? Charting()
                               : activeNav == 'Attachment'
                                   ? AttachmentPage()
-                                  : PatientProfile())
+                                  : PatientProfile(widget.patient))
         ],
       ),
       drawer: NavDrawer(),
