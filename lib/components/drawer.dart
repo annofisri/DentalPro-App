@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:dental/pages/notification.dart';
+import 'package:dental/pages/patients.dart';
 import 'package:dental/services/drawer.service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
@@ -162,6 +163,18 @@ class _NavDrawerState extends State<NavDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+              // getUserImage();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.personal_injury),
+            title: Text("Patients"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PatientPage()),
               );
               // getUserImage();
             },
