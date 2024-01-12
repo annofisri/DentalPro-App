@@ -12,6 +12,9 @@ class PatientPage extends StatefulWidget {
 class _PatientPageState extends State<PatientPage> {
   TextEditingController patientName = TextEditingController();
   var patientData = [];
+  var currentPage = 0;
+  var last = true;
+  var first = true;
 
   @override
   void initState() {
@@ -20,9 +23,13 @@ class _PatientPageState extends State<PatientPage> {
   }
 
   void getAllPatients() async {
-    var data = await PatientService().getAllPAtients(patientName.text) ?? {};
+    var data =
+        await PatientService().getAllPAtients(patientName.text, currentPage) ??
+            {};
     setState(() {
       patientData = data['content'];
+      first = data['first'];
+      last = data['last'];
     });
   }
 
@@ -132,7 +139,43 @@ class _PatientPageState extends State<PatientPage> {
                       );
                     },
                   ),
-                )
+                ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                first == false
+                    ? GestureDetector(
+                        onTap: getAllPatients,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Text('Prev',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      )
+                    : Text(''),
+                last == false
+                    ? GestureDetector(
+                        onTap: getAllPatients,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Text('Next',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      )
+                    : Text('')
+              ],
+            ),
+          )
         ]),
       ),
       drawer: NavDrawer(),

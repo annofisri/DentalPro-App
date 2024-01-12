@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class PatientService {
-  Future getAllPAtients(name) async {
+  Future getAllPAtients(name, currentPage) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? userList = prefs.getStringList('userList') ?? [];
     String? api;
@@ -27,7 +27,7 @@ class PatientService {
         {"field": "gender", "value": ""},
         {"field": "age", "value": ""}
       ],
-      "pagination": {"pageIndex": 0, "pageSize": 25},
+      "pagination": {"pageIndex": currentPage, "pageSize": 25},
       "sortDTO": [
         {"field": "name", "orderType": "asc"}
       ]
