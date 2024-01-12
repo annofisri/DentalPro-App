@@ -178,6 +178,7 @@ class _NavDrawerState extends State<NavDrawer> {
               );
             },
           ),
+          Container(),
           ListTile(
             title: Text(
               activeUser != null
