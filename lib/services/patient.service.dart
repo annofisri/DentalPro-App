@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class PatientService {
-  Future getAllPAtients() async {
+  Future getAllPAtients(name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? userList = prefs.getStringList('userList') ?? [];
     String? api;
@@ -21,7 +21,7 @@ class PatientService {
 
     var data = {
       "filter": [
-        {"field": "name", "value": ""},
+        {"field": "name", "value": name ?? ""},
         {"field": "registrationNo", "value": ""},
         {"field": "contactNumber", "value": ""},
         {"field": "gender", "value": ""},

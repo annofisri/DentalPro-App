@@ -20,7 +20,7 @@ class _PatientPageState extends State<PatientPage> {
   }
 
   void getAllPatients() async {
-    var data = await PatientService().getAllPAtients() ?? {};
+    var data = await PatientService().getAllPAtients(patientName.text) ?? {};
     setState(() {
       patientData = data['content'];
     });
@@ -60,12 +60,15 @@ class _PatientPageState extends State<PatientPage> {
                         border: InputBorder.none),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(54, 135, 147, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Text('Find', style: TextStyle(color: Colors.white)),
+                GestureDetector(
+                  onTap: getAllPatients,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(54, 135, 147, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Text('Find', style: TextStyle(color: Colors.white)),
+                  ),
                 )
               ],
             ),
