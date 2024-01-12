@@ -178,28 +178,6 @@ class _NavDrawerState extends State<NavDrawer> {
               );
             },
           ),
-          Container(),
-          ListTile(
-            title: Text(
-              activeUser != null
-                  ? '${activeUser['image'].toString()}'
-                  : 'Sandip Shakya', // User name
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Center(
-              child: SvgPicture.asset(
-                'assets/logo.svg', // Replace with your logo asset path
-                height: 20, // Adjust as needed
-              ),
-            ),
-          ),
         ],
       ),
     );
