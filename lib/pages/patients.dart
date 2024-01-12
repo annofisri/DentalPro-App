@@ -1,4 +1,5 @@
 import 'package:dental/components/drawer.dart';
+import 'package:dental/services/patient.service.dart';
 import 'package:flutter/material.dart';
 
 class PatientPage extends StatefulWidget {
@@ -10,6 +11,20 @@ class PatientPage extends StatefulWidget {
 
 class _PatientPageState extends State<PatientPage> {
   TextEditingController patientName = TextEditingController();
+  var patientData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAllPatients();
+  }
+
+  void getAllPatients() async {
+    var data = await PatientService().getAllPAtients() ?? {};
+    setState(() {
+      patientData = data['content'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,55 +70,66 @@ class _PatientPageState extends State<PatientPage> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: Card(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "name",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Address: ",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w300),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Email: ",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w300),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Mobile No.: ",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      ),
-                    ),
+          patientData.length == 0
+              ? Container(
+                  height: 500,
+                  child: Center(
+                    child: Text('No Data to Display!'),
                   ),
-                );
-              },
-            ),
-          )
+                )
+              : Expanded(
+                  child: ListView.builder(
+                    itemCount: patientData.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: Card(
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  patientData[index]['name'],
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Address: ${patientData[index]['address']}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Email Address: ${patientData[index]['email_id']}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Mobile No.: ${patientData[index]['name']}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
         ]),
       ),
       drawer: NavDrawer(),
