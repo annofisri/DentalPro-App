@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:dental/components/drawer.dart';
 import 'package:dental/services/appointment.service.dart';
-import 'package:dental/services/dashboard.service.dart';
+import 'package:dental/services/notification.service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Notificationservice notificationservice = Notificationservice();
+  var notificationData = [];
   var dashboardData;
   var appointmentData;
   List<String> next7Days = [];
@@ -22,7 +26,55 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    checkPermission();
+
+    getNotifications();
+
+    showNotification();
+
     getNext7DaysFormatted();
+  }
+
+  void showNotification() async {
+    notificationData = await getNotifications();
+    notificationservice.initializeNotification();
+    for (var item in notificationData) {
+      print(item);
+      notificationservice.sendNotification(
+          item['id'], item['title'] as String, item['body'] as String);
+      // notificationservice.sendNotification('title', 'test');
+    }
+  }
+
+  getNotifications() async {
+    var data = await Notificationservice().getNotifications() ?? {};
+    setState(() {
+      notificationData = data;
+    });
+    return data;
+  }
+
+  void checkPermission() async {
+    // check for permission
+    PermissionStatus status = await Permission.notification.status;
+
+    if (status.isGranted) {
+      print("Notification permission is granted");
+      // Perform actions requiring notification permission here
+    } else {
+      print("Notification permission is not granted");
+      // Request notification permission
+      PermissionStatus newStatus = await Permission.notification.request();
+
+      if (newStatus.isGranted) {
+        print("Notification permission granted after request");
+        // Perform actions requiring notification permission here
+      } else {
+        print("Notification permission denied after request");
+        // Handle the case where the user denies permission
+      }
+    }
+    // check for permission end
   }
 
   void getNext7DaysFormatted() async {
@@ -50,7 +102,6 @@ class _HomePageState extends State<HomePage> {
   getAppointmentData() async {
     var data = await AppointmentService().getAppointmentData(selectedDay) ?? {};
     ;
-    print(data);
     setState(() {
       appointmentData = data['content'];
     });

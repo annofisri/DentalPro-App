@@ -68,8 +68,6 @@ class _LoginPageState extends State<LoginPage> {
       userList.add(jsonEncode(userInfo));
       prefs.setStringList('userList', userList);
 
-      var res = prefs.getStringList('userList');
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dental/components/drawer.dart';
+import 'package:dental/components/full.screen.image.dart';
 import 'package:dental/services/notification.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -80,23 +81,38 @@ class _NotificationPageState extends State<NotificationPage> {
                                       notificationData[index]['image_name'] ==
                                           ''
                                   ? Text('')
-                                  : FutureBuilder<Uint8List>(
-                                      future: Notificationservice()
-                                          .fetchNoticeBlobImage(
-                                              notificationData[index]
-                                                  ['image_name']),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Text('loading');
-                                        } else if (snapshot.hasError) {
-                                          print('Error: ${snapshot.error}');
-                                          return Text(
-                                              'Error: ${snapshot.error}');
-                                        } else {
-                                          return Image.memory(snapshot.data!);
-                                        }
+                                  : GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .push(PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              FullScreenImage(
+                                            Notificationservice()
+                                                .fetchNoticeBlobImage(
+                                                    notificationData[index]
+                                                        ['image_name']),
+                                          ),
+                                        ));
                                       },
+                                      child: FutureBuilder<Uint8List>(
+                                        future: Notificationservice()
+                                            .fetchNoticeBlobImage(
+                                                notificationData[index]
+                                                    ['image_name']),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Text('loading');
+                                          } else if (snapshot.hasError) {
+                                            print('Error: ${snapshot.error}');
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else {
+                                            return Image.memory(snapshot.data!);
+                                          }
+                                        },
+                                      ),
                                     )
                             ],
                           )

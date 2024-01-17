@@ -4,15 +4,12 @@ import 'dart:convert';
 import 'package:dental/pages/notification.dart';
 import 'package:dental/pages/patients.dart';
 import 'package:dental/services/drawer.service.dart';
-import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'package:dental/pages/appointment.dart';
 import 'package:dental/services/auth.service.dart';
 import 'package:flutter/material.dart';
 import 'package:dental/pages/login.dart';
 import 'package:dental/pages/home.dart';
-import 'package:dental/pages/notification.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -31,7 +28,6 @@ class _NavDrawerState extends State<NavDrawer> {
   void initState() {
     super.initState();
     getActiveUser();
-    print("hello");
   }
 
   void logout() async {
