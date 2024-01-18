@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dental/pages/home.dart';
 import 'package:dental/services/auth.service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -121,16 +122,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(54, 135, 147, 1),
-        title: const Text(
-          'DPMS',
-          style: TextStyle(
-              fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
+      backgroundColor: Color.fromRGBO(249, 249, 250, 1),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -138,78 +130,97 @@ class _LoginPageState extends State<LoginPage> {
               fit: BoxFit.fitWidth,
               alignment: AlignmentDirectional.bottomEnd),
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextField(
-                  controller: url,
-                  decoration: InputDecoration(
-                    labelText: 'Base URL',
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(226, 232, 240, 1),
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: username,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(226, 232, 240, 1),
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: password,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(226, 232, 240, 1),
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => checkURL(),
-                  child: Text('Login'),
-                ),
-              ],
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
+              child: SvgPicture.asset(
+                'assets/login_logo.svg',
+                width: 205,
+              ),
             ),
-          ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        margin: EdgeInsets.fromLTRB(0, 80, 0, 30),
+                        child: Text(
+                          'Welcome!',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        )),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: url,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)))),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: username,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(226, 232, 240, 1),
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextField(
+                      controller: password,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(226, 232, 240, 1),
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => checkURL(),
+                      child: Text('Login'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
