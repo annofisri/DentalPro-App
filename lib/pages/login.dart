@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
         child: ListView(
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 80, 0, 0),
               child: SvgPicture.asset(
                 'assets/login_logo.svg',
                 width: 205,
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        margin: EdgeInsets.fromLTRB(0, 80, 0, 30),
+                        margin: EdgeInsets.fromLTRB(0, 60, 0, 30),
                         child: Text(
                           'Welcome!',
                           style: TextStyle(
@@ -251,10 +251,32 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: true,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => checkURL(),
-                      child: Text('Login'),
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: Text(
+                        'Forgot Password',
+                        textAlign: TextAlign.right,
+                        style:
+                            TextStyle(color: Color.fromRGBO(54, 135, 147, 1)),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => checkURL(),
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Color.fromRGBO(54, 135, 147, 1),
+                                padding:
+                                    EdgeInsets.fromLTRB(134, 16, 134, 15))),
+                      ],
                     ),
                   ],
                 ),
