@@ -131,75 +131,85 @@ class _LoginPageState extends State<LoginPage> {
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextField(
-              controller: url,
-              decoration: InputDecoration(
-                labelText: 'Base URL',
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(226, 232, 240, 1),
-                    width: 1.0,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/login_background.png"),
+              fit: BoxFit.fitWidth,
+              alignment: AlignmentDirectional.bottomEnd),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Login',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: username,
-              decoration: InputDecoration(
-                labelText: 'Username',
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(226, 232, 240, 1),
-                    width: 1.0,
+                TextField(
+                  controller: url,
+                  decoration: InputDecoration(
+                    labelText: 'Base URL',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      borderSide: BorderSide(
+                        color: Color.fromRGBO(226, 232, 240, 1),
+                        width: 1.0,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: password,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  borderSide: BorderSide(
-                    color: Color.fromRGBO(226, 232, 240, 1),
-                    width: 1.0,
+                SizedBox(height: 16),
+                TextField(
+                  controller: username,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      borderSide: BorderSide(
+                        color: Color.fromRGBO(226, 232, 240, 1),
+                        width: 1.0,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              obscureText: true,
+                SizedBox(height: 16),
+                TextField(
+                  controller: password,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      borderSide: BorderSide(
+                        color: Color.fromRGBO(226, 232, 240, 1),
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => checkURL(),
+                  child: Text('Login'),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => checkURL(),
-              child: Text('Login'),
-            ),
-          ],
+          ),
         ),
       ),
     );
