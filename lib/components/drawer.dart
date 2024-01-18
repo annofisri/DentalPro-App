@@ -78,53 +78,43 @@ class _NavDrawerState extends State<NavDrawer> {
         padding: const EdgeInsets.all(0.0),
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(54, 135, 147, 1), // Background color
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 30,
-
-                  child: FutureBuilder<Uint8List>(
-                    future: DrawerService().fetchBlobImage(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('loading');
-                      } else if (snapshot.hasError) {
-                        print('Error: ${snapshot.error}');
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return Image.memory(snapshot.data!);
-                      }
-                    },
+                Center(
+                  child: CircleAvatar(
+                    radius: 40,
+                    child: FutureBuilder<Uint8List>(
+                      future: DrawerService().fetchBlobImage(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text('loading');
+                        } else if (snapshot.hasError) {
+                          print('Error: ${snapshot.error}');
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return ClipOval(child: Image.memory(snapshot.data!));
+                        }
+                      },
+                    ),
                   ),
-                  // SvgPicture.asset(
-                  //   'assets/dashboard-patient.svg',
-                  //   height: 20,
-                  // ),
                 ),
                 SizedBox(height: 10),
-                Text(
-                  activeUser != null
-                      ? '${activeUser['name']}'
-                      : 'Sandip Shakya', // User name
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Center(
+                  child: Text(
+                    activeUser != null
+                        ? '${activeUser['name']}'
+                        : '', // User name
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Admin', // Role
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
-                ),
               ],
             ),
           ),
