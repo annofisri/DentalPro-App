@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
               fit: BoxFit.fitWidth,
               alignment: AlignmentDirectional.bottomEnd),
         ),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
@@ -153,6 +153,14 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.bold),
                         )),
+                    Text(
+                      'Enter Workspace URL',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -177,39 +185,71 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    TextField(
-                      controller: username,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(226, 232, 240, 1),
-                            width: 1.0,
+                    Text(
+                      'Username',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1),
                           ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: username,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
                         ),
                       ),
                     ),
                     SizedBox(height: 16),
-                    TextField(
-                      controller: password,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(226, 232, 240, 1),
-                            width: 1.0,
+                    Text(
+                      'Password',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1),
                           ),
-                        ),
+                        ],
                       ),
-                      obscureText: true,
+                      child: TextField(
+                        controller: password,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                        ),
+                        obscureText: true,
+                      ),
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
