@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/notification.dart';
 import 'package:dental/services/appointment.service.dart';
 import 'package:dental/services/notification.service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -106,18 +108,30 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void goToNotification() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NotificationPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(54, 135, 147, 1),
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-              fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+        backgroundColor: Color(0xFF368793),
+        title: Center(
+          child: SvgPicture.asset(
+            'assets/login_logo.svg',
+          ),
         ),
         iconTheme: IconThemeData(color: Colors.white),
         elevation: 0,
+        actions: [
+          IconButton(
+              onPressed: goToNotification,
+              icon: Icon(Icons.notifications_active_outlined))
+        ],
       ),
       body: Column(
         children: [
