@@ -115,6 +115,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  String getDate(date) {
+    // Parse the string to a DateTime object
+    String dateString = date;
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the DateTime object as "20 Jan"
+    String formattedDate = DateFormat('dd MMM').format(dateTime);
+    return formattedDate;
+  }
+
+  String getDay(date) {
+    // Parse the string to a DateTime object
+    String dateString = date;
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the DateTime object as "EEE" (short day of the week format)
+    String formattedDay = DateFormat('EEE').format(dateTime);
+    return formattedDay;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,9 +154,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "This Week's",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
           Container(
-            height: 50,
+            height: 60,
             child: next7Days.length > 0
                 ? ListView.builder(
                     itemCount: next7Days.length,
@@ -151,9 +176,19 @@ class _HomePageState extends State<HomePage> {
                           width: 100,
                           padding: EdgeInsets.all(10),
                           child: Center(
-                            child: Text(
-                              next7Days[index],
-                              style: TextStyle(color: Colors.white),
+                            child: Column(
+                              children: [
+                                Text(
+                                  selectedDay == next7Days[index]
+                                      ? 'Today'
+                                      : getDay(next7Days[index]),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Text(
+                                  getDate(next7Days[index]),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
                           ),
                         ),
