@@ -96,8 +96,7 @@ class Notificationservice {
         "Authorization": 'Bearer $token',
         "origin": "http://182.93.83.242:5002"
       });
-      print('test');
-      print(response.body);
+
       if (response.statusCode == 200) {
         // Successful API request
         Uint8List responseData = Uint8List.fromList(response.bodyBytes);

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +10,6 @@ class AuthService {
   var token;
 
   Future login(data, baseUrl) async {
-    print(baseUrl);
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {
@@ -18,6 +18,40 @@ class AuthService {
       body: jsonEncode(data),
     );
     return response;
+  }
+
+  Future changePassword(oldPassword, newPassword) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? userList = prefs.getStringList('userList') ?? [];
+    String? api;
+    String? token;
+    int? id;
+    for (String userInfoString in userList) {
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      if (userInfo['active'] == true) {
+        api = userInfo['api'];
+        id = userInfo['userId'];
+        token = userInfo['token'];
+        break;
+      }
+    }
+
+    print(id);
+
+    var data = {
+      "current_password": oldPassword,
+      "password": newPassword,
+    };
+
+    final response = await http.post(
+        Uri.parse('$api/master/users/changePassword/$id'),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer $token'
+        },
+        body: jsonEncode(data));
+
+    return jsonDecode(response.body);
   }
 
   Future getUserImage(token, id, baseUrl) async {

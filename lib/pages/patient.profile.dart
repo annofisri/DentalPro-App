@@ -13,7 +13,6 @@ class _PatientProfileState extends State<PatientProfile> {
   @override
   void initState() {
     super.initState();
-    print(widget.patient);
   }
 
   @override

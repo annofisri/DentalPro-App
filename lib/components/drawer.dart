@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:dental/pages/notification.dart';
 import 'package:dental/pages/patients.dart';
+import 'package:dental/pages/resetpassword.dart';
 import 'package:dental/services/drawer.service.dart';
 import 'dart:typed_data';
 import 'package:dental/pages/appointment.dart';
@@ -70,114 +71,285 @@ class _NavDrawerState extends State<NavDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-      ),
-      child: ListView(
-        padding: const EdgeInsets.all(0.0),
-        children: [
-          DrawerHeader(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: CircleAvatar(
-                    radius: 40,
-                    child: FutureBuilder<Uint8List>(
-                      future: DrawerService().fetchBlobImage(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text('loading');
-                        } else if (snapshot.hasError) {
-                          print('Error: ${snapshot.error}');
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return ClipOval(child: Image.memory(snapshot.data!));
-                        }
-                      },
+    return Container(
+      width: 200,
+      child: Drawer(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(0.0),
+          children: [
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: 40,
+                      child: FutureBuilder<Uint8List>(
+                        future: DrawerService().fetchBlobImage(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Text('loading');
+                          } else if (snapshot.hasError) {
+                            print('Error: ${snapshot.error}');
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return ClipOval(
+                                child: Image.memory(snapshot.data!));
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    activeUser != null
-                        ? '${activeUser['name']}'
-                        : '', // User name
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(height: 10),
+                  Center(
+                    child: Text(
+                      activeUser != null
+                          ? '${activeUser['name']}'
+                          : '', // User name
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 5),
-              ],
+                  SizedBox(height: 5),
+                ],
+              ),
             ),
-          ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Dashboard"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.calendar_month),
-            title: Text("Appointment"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AppointmentPage()),
-              );
-              // getUserImage();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.notifications_active),
-            title: Text("Notification"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
-              );
-              // getUserImage();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.personal_injury),
-            title: Text("Patients"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PatientPage()),
-              );
-              // getUserImage();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.login),
-            title: Text("Logout"),
-            onTap: () {
-              logout();
-              // Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.fromLTRB(24, 20, 24, 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.home),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Home",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.calendar_month),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Appointment",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotificationPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.notifications_active),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Notifications",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PatientPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.personal_injury),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Patients",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 300),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ResetPasswordPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.password),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Reset Password",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          logout();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Log Out",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+            // ListTile(
+            //   leading: Icon(Icons.home),
+            //   title: Text("Home"),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => HomePage()),
+            //     );
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.calendar_month),
+            //   title: Text("Appointment"),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => AppointmentPage()),
+            //     );
+            //     // getUserImage();
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.notifications_active),
+            //   title: Text("Notification"),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => NotificationPage()),
+            //     );
+            //     // getUserImage();
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.personal_injury),
+            //   title: Text("Patients"),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => PatientPage()),
+            //     );
+            //     // getUserImage();
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.login),
+            //   title: Text("Logout"),
+            //   onTap: () {
+            //     logout();
+            //     // Navigator.pop(context);
+            //     Navigator.pushReplacement(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => LoginPage()),
+            //     );
+            //   },
+            // ),
+          ],
+        ),
       ),
     );
   }

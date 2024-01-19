@@ -88,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
   getUserImage(token, id, uri) async {
     var res = await authService.getUserImage(token, id, uri);
     if (res.statusCode == 200) {
-      print('Success');
       setState(() {
         userImage = base64Encode(res.bodyBytes);
       });

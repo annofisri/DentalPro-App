@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
     notificationData = await getNotifications();
     notificationservice.initializeNotification();
     for (var item in notificationData) {
-      print(item);
       notificationservice.sendNotification(
           item['id'], item['title'] as String, item['body'] as String);
       // notificationservice.sendNotification('title', 'test');
