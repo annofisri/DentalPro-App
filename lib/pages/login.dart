@@ -252,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Container(
                       width: double.infinity,
-                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
                       child: Text(
                         'Forgot Password',
                         textAlign: TextAlign.right,

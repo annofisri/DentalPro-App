@@ -80,6 +80,7 @@ flutter:
     - assets/login_background.png
     - assets/login_logo.png
     - assets/login_logo.svg
+    - assets/app-logo.svg
     - android/app/src/main/res/mipmap-hdpi/ic_launcher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

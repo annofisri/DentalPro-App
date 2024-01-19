@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
       // Perform actions requiring notification permission here
     } else {
       print("Notification permission is not granted");
-      // Request notification permission
+      // Request notificatio    getAppointmentData();n permission
       PermissionStatus newStatus = await Permission.notification.request();
 
       if (newStatus.isGranted) {
@@ -89,6 +89,7 @@ class _HomePageState extends State<HomePage> {
 
     next7Days = await dateList;
     selectedDay = next7Days[0];
+
     getAppointmentData();
   }
 
@@ -106,6 +107,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       appointmentData = data['content'];
     });
+    print(appointmentData);
   }
 
   void goToNotification() {
@@ -135,6 +137,25 @@ class _HomePageState extends State<HomePage> {
     return formattedDay;
   }
 
+  String dateConverter(date) {
+    String dateString = date;
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the DateTime object as "MMM d, y" (e.g., "Jun 1, 2024")
+    String formattedDate = DateFormat('MMM d, y').format(dateTime);
+    return formattedDate;
+  }
+
+  String timeConverter(time) {
+    // Parse the string to a DateTime object (assuming it represents a time)
+    String timeString = time;
+    DateTime dateTime = DateFormat('HH:mm:ss').parse(timeString);
+
+    // Format the DateTime object as "h:mm a" (e.g., "12:42 PM")
+    String formattedTime = DateFormat('h:mm a').format(dateTime);
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +163,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color(0xFF368793),
         title: Center(
           child: SvgPicture.asset(
-            'assets/login_logo.svg',
+            'assets/app-logo.svg',
           ),
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -153,140 +174,179 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.notifications_active_outlined))
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "This Week's",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-          ),
-          Container(
-            height: 60,
-            child: next7Days.length > 0
-                ? ListView.builder(
-                    itemCount: next7Days.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () => setSelectedDay(next7Days[index]),
-                        child: Container(
-                          color: selectedDay == next7Days[index]
-                              ? Colors.orange
-                              : Colors.black,
-                          width: 100,
-                          padding: EdgeInsets.all(10),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Text(
-                                  selectedDay == next7Days[index]
-                                      ? 'Today'
-                                      : getDay(next7Days[index]),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  getDate(next7Days[index]),
-                                  style: TextStyle(color: Colors.white),
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 6,
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: Text(
+                "This Week's",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Container(
+              height: 65,
+              child: next7Days.length > 0
+                  ? ListView.builder(
+                      itemCount: next7Days.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () => setSelectedDay(next7Days[index]),
+                          child: Container(
+                            // color: selectedDay == next7Days[index]
+                            //     ? Color(0xFF368793)
+                            //     : Colors.black,
+                            margin: EdgeInsets.fromLTRB(6, 0, 6, 0),
+                            width: 100,
+                            decoration: BoxDecoration(
+                                color: selectedDay == next7Days[index]
+                                    ? Color(0xFF368793)
+                                    : Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                border: Border.all(
+                                    color: Color(0xFF368793), width: 1)),
+                            padding: EdgeInsets.all(10),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    index == 0
+                                        ? 'Today'
+                                        : getDay(next7Days[index]),
+                                    style: TextStyle(
+                                        color: selectedDay == next7Days[index]
+                                            ? Colors.white
+                                            : Color(0xFF368793),
+                                        fontSize: 13),
+                                  ),
+                                  Text(
+                                    getDate(next7Days[index]),
+                                    style: TextStyle(
+                                        color: selectedDay == next7Days[index]
+                                            ? Colors.white
+                                            : Color(0xFF368793),
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })
+                  : Text('Something went wrong!'),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: Text(
+                "Time",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+                // ignore: unnecessary_null_comparison
+                child: Container(
+              child: appointmentData != null
+                  ? ListView.builder(
+                      itemCount: appointmentData.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                            height: 120,
+                            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: index % 2 != 0
+                                  ? Colors.white
+                                  : Color.fromRGBO(199, 233, 238, 1),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 1),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      );
-                    })
-                : Text('Something went wrong!'),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(
-              // ignore: unnecessary_null_comparison
-              child: Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: appointmentData != null
-                ? ListView.builder(
-                    itemCount: appointmentData.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(54, 135, 147, 1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Date: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          '${appointmentData[index]['appointment_date']}',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Status: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          '${appointmentData[index]['appointment_status']}',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ]),
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          "Patient's Name: ",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          '${appointmentData[index]['patient_name']}',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          'Treatment: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          '${appointmentData[index]['treatment_name']}',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ]),
-                            ]),
-                      );
-                    })
-                : Center(child: Text('no data')),
-          ))
-        ],
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 2, color: Colors.white))),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        appointmentData[index]['doctor_name'],
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color:
+                                                Color.fromRGBO(33, 82, 90, 1)),
+                                        softWrap: true,
+                                      ),
+                                      Text(
+                                        dateConverter(appointmentData[index]
+                                            ['appointment_date']),
+                                        style: TextStyle(fontSize: 11),
+                                      ),
+                                      Text(
+                                        '${timeConverter(appointmentData[index]['start_time'])} - ${timeConverter(appointmentData[index]['end_time'])}',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        appointmentData[index]['patient_name'],
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color.fromRGBO(5, 5, 5, 1)),
+                                      ),
+                                      Text(
+                                        'Problem:',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                      Text(
+                                          appointmentData[index]
+                                              ['chief_problem'],
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ));
+                      })
+                  : Center(child: Text('no data')),
+            ))
+          ],
+        ),
       ),
       drawer: NavDrawer(),
     );
