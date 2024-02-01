@@ -72,6 +72,7 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       width: 200,
       child: Drawer(
         shape: const RoundedRectangleBorder(

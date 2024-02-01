@@ -41,6 +41,34 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
+    RegExp usernameRegEx = RegExp(r'^[a-zA-Z0-9_]+$');
+    RegExp passwordRegEx =
+        RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+
+    bool validUsername = usernameRegEx.hasMatch(username.text);
+    bool validPassword = passwordRegEx.hasMatch(password.text);
+
+    if (!validUsername) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter a valid Username!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (!validPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter a valid Password!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     final data = {"username": username.text, "password": password.text};
 
     var response = await authService.login(data, url.text);

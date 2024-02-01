@@ -182,6 +182,124 @@ class _HomePageState extends State<HomePage> {
               height: 6,
             ),
             Container(
+                margin: EdgeInsets.all(10),
+                child: Text(
+                  'Welcome, Dr.Nischal Shrestha',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                )),
+            Card(
+                color: Colors.white,
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: Color(0xFF368793)),
+                            child: Icon(
+                              Icons.calendar_month,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '10',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                'Total',
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: Color(0xFF368793)),
+                            child: Icon(
+                              Icons.calendar_month,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '10',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                'Completed',
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: Color(0xFF368793)),
+                            child: Icon(
+                              Icons.calendar_month,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '10',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+            Container(
               margin: EdgeInsets.all(10),
               child: Text(
                 "This Week's",
@@ -257,105 +375,105 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            appointmentData.length > 0
-                ? Expanded(
-                    // ignore: unnecessary_null_comparison
-                    child: Container(
-                    child: appointmentData != null
-                        ? ListView.builder(
-                            itemCount: appointmentData.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                  height: 120,
-                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: index % 2 != 0
-                                        ? Colors.white
-                                        : Color.fromRGBO(199, 233, 238, 1),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        spreadRadius: 1,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 1),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 2,
-                                                    color: Colors.white))),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              appointmentData[index]
-                                                  ['doctor_name'],
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color.fromRGBO(
-                                                      33, 82, 90, 1)),
-                                              softWrap: true,
-                                            ),
-                                            Text(
-                                              dateConverter(
-                                                  appointmentData[index]
-                                                      ['appointment_date']),
-                                              style: TextStyle(fontSize: 11),
-                                            ),
-                                            Text(
-                                              '${timeConverter(appointmentData[index]['start_time'])} - ${timeConverter(appointmentData[index]['end_time'])}',
-                                              style: TextStyle(fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              appointmentData[index]
-                                                  ['patient_name'],
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Color.fromRGBO(
-                                                      5, 5, 5, 1)),
-                                            ),
-                                            Text(
-                                              'Problem:',
-                                              style: TextStyle(fontSize: 13),
-                                            ),
-                                            Text(
-                                                appointmentData[index]
-                                                    ['chief_problem'],
-                                                style: TextStyle(fontSize: 13)),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ));
-                            })
-                        : Center(child: Text('no data')),
-                  ))
-                : Container(
-                    height: 200,
-                    child: Center(child: Text("No Appointments to Display")))
+            // appointmentData.length > 0
+            //     ? Expanded(
+            //         // ignore: unnecessary_null_comparison
+            //         child: Container(
+            //         child: appointmentData != null
+            //             ? ListView.builder(
+            //                 itemCount: appointmentData.length,
+            //                 itemBuilder: (context, index) {
+            //                   return Container(
+            //                       height: 120,
+            //                       margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            //                       padding: EdgeInsets.all(10),
+            //                       decoration: BoxDecoration(
+            //                         color: index % 2 != 0
+            //                             ? Colors.white
+            //                             : Color.fromRGBO(199, 233, 238, 1),
+            //                         boxShadow: [
+            //                           BoxShadow(
+            //                             color: Colors.black.withOpacity(0.1),
+            //                             spreadRadius: 1,
+            //                             blurRadius: 2,
+            //                             offset: Offset(0, 1),
+            //                           ),
+            //                         ],
+            //                       ),
+            //                       child: ListView(
+            //                         scrollDirection: Axis.horizontal,
+            //                         children: [
+            //                           Container(
+            //                             padding:
+            //                                 EdgeInsets.fromLTRB(0, 0, 10, 0),
+            //                             width: 150,
+            //                             decoration: BoxDecoration(
+            //                                 border: Border(
+            //                                     right: BorderSide(
+            //                                         width: 2,
+            //                                         color: Colors.white))),
+            //                             child: Column(
+            //                               crossAxisAlignment:
+            //                                   CrossAxisAlignment.start,
+            //                               children: [
+            //                                 Text(
+            //                                   appointmentData[index]
+            //                                       ['doctor_name'],
+            //                                   style: TextStyle(
+            //                                       fontSize: 16,
+            //                                       fontWeight: FontWeight.w700,
+            //                                       color: Color.fromRGBO(
+            //                                           33, 82, 90, 1)),
+            //                                   softWrap: true,
+            //                                 ),
+            //                                 Text(
+            //                                   dateConverter(
+            //                                       appointmentData[index]
+            //                                           ['appointment_date']),
+            //                                   style: TextStyle(fontSize: 11),
+            //                                 ),
+            //                                 Text(
+            //                                   '${timeConverter(appointmentData[index]['start_time'])} - ${timeConverter(appointmentData[index]['end_time'])}',
+            //                                   style: TextStyle(fontSize: 13),
+            //                                 ),
+            //                               ],
+            //                             ),
+            //                           ),
+            //                           Container(
+            //                             padding:
+            //                                 EdgeInsets.fromLTRB(10, 0, 0, 0),
+            //                             child: Column(
+            //                               crossAxisAlignment:
+            //                                   CrossAxisAlignment.start,
+            //                               children: [
+            //                                 Text(
+            //                                   appointmentData[index]
+            //                                       ['patient_name'],
+            //                                   style: TextStyle(
+            //                                       fontSize: 16,
+            //                                       fontWeight: FontWeight.w700,
+            //                                       color: Color.fromRGBO(
+            //                                           5, 5, 5, 1)),
+            //                                 ),
+            //                                 Text(
+            //                                   'Problem:',
+            //                                   style: TextStyle(fontSize: 13),
+            //                                 ),
+            //                                 Text(
+            //                                     appointmentData[index]
+            //                                         ['chief_problem'],
+            //                                     style: TextStyle(fontSize: 13)),
+            //                               ],
+            //                             ),
+            //                           ),
+            //                         ],
+            //                       ));
+            //                 })
+            //             : Center(child: Text('no data')),
+            //       ))
+            //     : Container(
+            //         height: 200,
+            //         child: Center(child: Text("No Appointments to Display")))
           ],
         ),
       ),
