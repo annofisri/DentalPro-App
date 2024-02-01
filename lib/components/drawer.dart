@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'package:dental/pages/calendar.dart';
 import 'package:dental/pages/notification.dart';
 import 'package:dental/pages/patients.dart';
 import 'package:dental/pages/resetpassword.dart';
@@ -146,6 +147,32 @@ class _NavDrawerState extends State<NavDrawer> {
                             ),
                             Text(
                               "Home",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CalendarPage()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.calendar_month),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              "Calendar",
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w400),
                             )
