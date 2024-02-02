@@ -1,5 +1,8 @@
 import 'package:dental/components/drawer.dart';
+import 'package:dental/services/appointment.service.dart';
+import 'package:dental/services/calendar.service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -10,6 +13,32 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  var monthAppointmentData;
+  var fromDate = '';
+  var toDate = '';
+
+  TextEditingController dateInput = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    fromDate = DateFormat('yyyy-MM-dd')
+        .format(DateTime(DateTime.now().year, DateTime.now().month, 1));
+
+    toDate = DateFormat('yyyy-MM-dd')
+        .format(DateTime(DateTime.now().year, DateTime.now().month + 1, 0));
+
+    getMonthAppointmentData();
+  }
+
+  getMonthAppointmentData() async {
+    var data =
+        await CalendarService().getAppointmentData(fromDate, toDate) ?? {};
+    setState(() {
+      monthAppointmentData = data['content'];
+      print(monthAppointmentData);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
