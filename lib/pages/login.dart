@@ -125,6 +125,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   checkURL() async {
+    if (url.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter a valid Workspace URL!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     try {
       var response = await authService.checkURL(url.text);
       setState(() {

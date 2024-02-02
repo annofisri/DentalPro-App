@@ -1,3 +1,6 @@
 {
-  "java.project.sourcePaths": ["test"]
+  "java.project.sourcePaths": [
+    "test"
+  ],
+  "cmake.sourceDirectory": "/home/biki/personalprojects/flutter/dpms-mb/windows/flutter"
 }
