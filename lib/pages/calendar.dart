@@ -22,6 +22,8 @@ class _CalendarPageState extends State<CalendarPage> {
   var monthAppointmentData = [];
   var fromDate = '';
   var toDate = '';
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
@@ -65,6 +67,13 @@ class _CalendarPageState extends State<CalendarPage> {
     });
   }
 
+  getAppointmentsForTheDay() async {
+    var tempDay = DateFormat('yyyy-MM-dd')
+        .format(DateTime.parse(_selectedDay.toString()));
+    var data = await AppointmentService().getAppointmentData(tempDay);
+    print(data);
+  }
+
   List<Event> _getEventsForDay(DateTime day) {
     // print("Events for $day: ${events[day]}");
     return events[day] ?? [];
@@ -100,9 +109,22 @@ class _CalendarPageState extends State<CalendarPage> {
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: DateTime.now(),
               calendarStyle: CalendarStyle(
-                  defaultTextStyle: TextStyle(color: Colors.white),
-                  weekNumberTextStyle: TextStyle(color: Colors.white),
-                  weekendTextStyle: TextStyle(color: Colors.white)),
+                defaultTextStyle: TextStyle(color: Colors.white),
+                selectedTextStyle: TextStyle(color: Colors.black),
+                weekNumberTextStyle: TextStyle(color: Colors.white),
+                weekendTextStyle: TextStyle(color: Colors.white),
+                todayDecoration: BoxDecoration(
+                    color: Colors
+                        .white70, // Set the color of the today date background
+                    shape: BoxShape
+                        .circle // You can use other shapes like BoxShape.rectangle
+                    ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  // or use any shape you prefer
+                ),
+              ),
               headerStyle: HeaderStyle(
                 titleCentered: true,
                 formatButtonVisible: false,
@@ -118,6 +140,16 @@ class _CalendarPageState extends State<CalendarPage> {
               daysOfWeekStyle: DaysOfWeekStyle(
                   weekdayStyle: TextStyle(color: Colors.white),
                   weekendStyle: TextStyle(color: Colors.white)),
+              selectedDayPredicate: (DateTime date) {
+                return isSameDay(_selectedDay, date);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  getAppointmentsForTheDay();
+                });
+              },
             ),
           ),
         ],
