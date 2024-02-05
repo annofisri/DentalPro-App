@@ -70,13 +70,33 @@ class _CalendarPageState extends State<CalendarPage> {
   getAppointmentsForTheDay() async {
     var tempDay = DateFormat('yyyy-MM-dd')
         .format(DateTime.parse(_selectedDay.toString()));
-    var data = await AppointmentService().getAppointmentData(tempDay);
-    print(data);
+    var data = await AppointmentService().getAppointmentData(tempDay) ??
+        {'content': []};
+    monthAppointmentData = await data['content'];
   }
 
   List<Event> _getEventsForDay(DateTime day) {
     // print("Events for $day: ${events[day]}");
     return events[day] ?? [];
+  }
+
+  String dateConverter(date) {
+    String dateString = date;
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Format the DateTime object as "MMM d, y" (e.g., "Jun 1, 2024")
+    String formattedDate = DateFormat('MMM d, y').format(dateTime);
+    return formattedDate;
+  }
+
+  String timeConverter(time) {
+    // Parse the string to a DateTime object (assuming it represents a time)
+    String timeString = time;
+    DateTime dateTime = DateFormat('HH:mm:ss').parse(timeString);
+
+    // Format the DateTime object as "h:mm a" (e.g., "12:42 PM")
+    String formattedTime = DateFormat('h:mm a').format(dateTime);
+    return formattedTime;
   }
 
   @override
@@ -144,14 +164,150 @@ class _CalendarPageState extends State<CalendarPage> {
                 return isSameDay(_selectedDay, date);
               },
               onDaySelected: (selectedDay, focusedDay) {
+                getAppointmentsForTheDay();
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
-                  getAppointmentsForTheDay();
                 });
               },
             ),
           ),
+          FutureBuilder<void>(
+              future: getAppointmentsForTheDay(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                      height: 100, child: Center(child: Text('Loading...')));
+                } else {
+                  // ignore: unnecessary_null_comparison
+                  return monthAppointmentData.length > 0
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                                child: Text(
+                              '${monthAppointmentData.length} appointment record(s)',
+                              style: TextStyle(
+                                  color: Color.fromRGBO(54, 135, 147, 1),
+                                  fontWeight: FontWeight.w700),
+                            )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 400,
+                              child: ListView.builder(
+                                  itemCount: monthAppointmentData.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                        height: 120,
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: index % 2 != 0
+                                              ? Colors.white
+                                              : Color.fromRGBO(
+                                                  199, 233, 238, 1),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.1),
+                                              spreadRadius: 1,
+                                              blurRadius: 2,
+                                              offset: Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 0, 10, 0),
+                                              width: 150,
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      right: BorderSide(
+                                                          width: 2,
+                                                          color:
+                                                              Colors.white))),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    monthAppointmentData[index]
+                                                        ['doctor_name'],
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Color.fromRGBO(
+                                                            33, 82, 90, 1)),
+                                                    softWrap: true,
+                                                  ),
+                                                  Text(
+                                                    dateConverter(
+                                                        monthAppointmentData[
+                                                                index][
+                                                            'appointment_date']),
+                                                    style:
+                                                        TextStyle(fontSize: 11),
+                                                  ),
+                                                  Text(
+                                                    '${timeConverter(monthAppointmentData[index]['start_time'])} - ${timeConverter(monthAppointmentData[index]['end_time'])}',
+                                                    style:
+                                                        TextStyle(fontSize: 13),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 0, 0, 0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    monthAppointmentData[index]
+                                                        ['patient_name'],
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Color.fromRGBO(
+                                                            5, 5, 5, 1)),
+                                                  ),
+                                                  Text(
+                                                    'Problem:',
+                                                    style:
+                                                        TextStyle(fontSize: 13),
+                                                  ),
+                                                  Text(
+                                                      monthAppointmentData[
+                                                              index]
+                                                          ['chief_problem'],
+                                                      style: TextStyle(
+                                                          fontSize: 13)),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                                  }),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          height: 200,
+                          child: Center(
+                              child: Text("No Appointments to Display")));
+                }
+              })
         ],
       ),
       drawer: NavDrawer(),

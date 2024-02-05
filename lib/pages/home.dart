@@ -375,105 +375,105 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            // appointmentData.length > 0
-            //     ? Expanded(
-            //         // ignore: unnecessary_null_comparison
-            //         child: Container(
-            //         child: appointmentData != null
-            //             ? ListView.builder(
-            //                 itemCount: appointmentData.length,
-            //                 itemBuilder: (context, index) {
-            //                   return Container(
-            //                       height: 120,
-            //                       margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            //                       padding: EdgeInsets.all(10),
-            //                       decoration: BoxDecoration(
-            //                         color: index % 2 != 0
-            //                             ? Colors.white
-            //                             : Color.fromRGBO(199, 233, 238, 1),
-            //                         boxShadow: [
-            //                           BoxShadow(
-            //                             color: Colors.black.withOpacity(0.1),
-            //                             spreadRadius: 1,
-            //                             blurRadius: 2,
-            //                             offset: Offset(0, 1),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                       child: ListView(
-            //                         scrollDirection: Axis.horizontal,
-            //                         children: [
-            //                           Container(
-            //                             padding:
-            //                                 EdgeInsets.fromLTRB(0, 0, 10, 0),
-            //                             width: 150,
-            //                             decoration: BoxDecoration(
-            //                                 border: Border(
-            //                                     right: BorderSide(
-            //                                         width: 2,
-            //                                         color: Colors.white))),
-            //                             child: Column(
-            //                               crossAxisAlignment:
-            //                                   CrossAxisAlignment.start,
-            //                               children: [
-            //                                 Text(
-            //                                   appointmentData[index]
-            //                                       ['doctor_name'],
-            //                                   style: TextStyle(
-            //                                       fontSize: 16,
-            //                                       fontWeight: FontWeight.w700,
-            //                                       color: Color.fromRGBO(
-            //                                           33, 82, 90, 1)),
-            //                                   softWrap: true,
-            //                                 ),
-            //                                 Text(
-            //                                   dateConverter(
-            //                                       appointmentData[index]
-            //                                           ['appointment_date']),
-            //                                   style: TextStyle(fontSize: 11),
-            //                                 ),
-            //                                 Text(
-            //                                   '${timeConverter(appointmentData[index]['start_time'])} - ${timeConverter(appointmentData[index]['end_time'])}',
-            //                                   style: TextStyle(fontSize: 13),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                           Container(
-            //                             padding:
-            //                                 EdgeInsets.fromLTRB(10, 0, 0, 0),
-            //                             child: Column(
-            //                               crossAxisAlignment:
-            //                                   CrossAxisAlignment.start,
-            //                               children: [
-            //                                 Text(
-            //                                   appointmentData[index]
-            //                                       ['patient_name'],
-            //                                   style: TextStyle(
-            //                                       fontSize: 16,
-            //                                       fontWeight: FontWeight.w700,
-            //                                       color: Color.fromRGBO(
-            //                                           5, 5, 5, 1)),
-            //                                 ),
-            //                                 Text(
-            //                                   'Problem:',
-            //                                   style: TextStyle(fontSize: 13),
-            //                                 ),
-            //                                 Text(
-            //                                     appointmentData[index]
-            //                                         ['chief_problem'],
-            //                                     style: TextStyle(fontSize: 13)),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ));
-            //                 })
-            //             : Center(child: Text('no data')),
-            //       ))
-            //     : Container(
-            //         height: 200,
-            //         child: Center(child: Text("No Appointments to Display")))
+            appointmentData.length > 0
+                ? Expanded(
+                    // ignore: unnecessary_null_comparison
+                    child: Container(
+                    child: appointmentData != null
+                        ? ListView.builder(
+                            itemCount: appointmentData.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                  height: 120,
+                                  margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: index % 2 != 0
+                                        ? Colors.white
+                                        : Color.fromRGBO(199, 233, 238, 1),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 2,
+                                                    color: Colors.white))),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              appointmentData[index]
+                                                  ['doctor_name'],
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color.fromRGBO(
+                                                      33, 82, 90, 1)),
+                                              softWrap: true,
+                                            ),
+                                            Text(
+                                              dateConverter(
+                                                  appointmentData[index]
+                                                      ['appointment_date']),
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                            Text(
+                                              '${timeConverter(appointmentData[index]['start_time'])} - ${timeConverter(appointmentData[index]['end_time'])}',
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              appointmentData[index]
+                                                  ['patient_name'],
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color.fromRGBO(
+                                                      5, 5, 5, 1)),
+                                            ),
+                                            Text(
+                                              'Problem:',
+                                              style: TextStyle(fontSize: 13),
+                                            ),
+                                            Text(
+                                                appointmentData[index]
+                                                    ['chief_problem'],
+                                                style: TextStyle(fontSize: 13)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            })
+                        : Center(child: Text('no data')),
+                  ))
+                : Container(
+                    height: 200,
+                    child: Center(child: Text("No Appointments to Display")))
           ],
         ),
       ),
