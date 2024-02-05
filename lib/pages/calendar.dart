@@ -5,6 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+class Event {
+  final String eventName;
+
+  Event(this.eventName);
+}
+
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
@@ -13,10 +19,20 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  var monthAppointmentData;
+  var monthAppointmentData = [];
   var fromDate = '';
   var toDate = '';
+  Map<DateTime, List<Event>> events = {};
 
+  final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+
+  // Map<DateTime, List<Event>> events = {
+  //   DateTime.parse('2024-02-17 00:00:00.000Z').toUtc(): [
+  //     Event("Meeting 1"),
+  //     Event("Meeting 2")
+  //   ],
+  //   DateTime.parse('2024-02-18 00:00:00.000Z').toUtc(): [Event("Meeting 3")],
+  // };
   TextEditingController dateInput = TextEditingController();
   @override
   void initState() {
@@ -31,12 +47,27 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   getMonthAppointmentData() async {
-    var data =
-        await CalendarService().getAppointmentData(fromDate, toDate) ?? {};
-    setState(() {
-      monthAppointmentData = data['content'];
-      print(monthAppointmentData);
+    var data = await CalendarService().getAppointmentData(fromDate, toDate);
+    if (data != null) {
+      setState(() {
+        monthAppointmentData = data['content'];
+        getEvents();
+      });
+    }
+  }
+
+  getEvents() {
+    this.monthAppointmentData.forEach((appointment) {
+      DateTime date =
+          DateTime.parse('${appointment['appointment_date']} 00:00:00.000Z')
+              .toUtc();
+      events[date] = [Event("${appointment['appointment_status']}")];
     });
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    // print("Events for $day: ${events[day]}");
+    return events[day] ?? [];
   }
 
   @override
@@ -62,6 +93,9 @@ class _CalendarPageState extends State<CalendarPage> {
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30))),
             child: TableCalendar(
+              eventLoader: (day) {
+                return _getEventsForDay(day);
+              },
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: DateTime.now(),
