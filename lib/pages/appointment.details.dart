@@ -1,8 +1,9 @@
 import 'package:dental/components/drawer.dart';
+import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentDetailsPage extends StatefulWidget {
-  final Object appointment;
+  final appointment;
   const AppointmentDetailsPage(this.appointment, {super.key});
 
   @override
@@ -46,11 +47,11 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Dr. Nischal Thapa',
+                    '${widget.appointment['title']} ${widget.appointment['doctor_name']}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    '- | -',
+                    '${widget.appointment['qualification']} | - ${widget.appointment['specialization']}',
                     style: TextStyle(fontSize: 13),
                   ),
                 ],
@@ -73,7 +74,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('APN 0006', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['system_appointment_no'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -88,7 +90,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['appointment_date'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -103,7 +106,9 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(
+                        '${UtilService().timeConverter(widget.appointment['start_time'])} - ${UtilService().timeConverter(widget.appointment['end_time'])}',
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -118,7 +123,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['patient_name'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -133,7 +139,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['patient_code'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -148,7 +155,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text('-', style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -163,7 +170,7 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text('-', style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -178,7 +185,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['chief_problem'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -193,7 +201,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['treatment_name'],
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -208,7 +217,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text('${widget.appointment['treatment_time']} min',
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -223,7 +233,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text('${widget.appointment['buffer_time']} min',
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -238,7 +249,8 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Text(widget.appointment['note'] ?? '-',
+                        style: TextStyle(fontSize: 13)),
                   ),
                 ],
               ),
@@ -253,7 +265,18 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text('24/10/50', style: TextStyle(fontSize: 13)),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          width: 60,
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(117, 255, 156, 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          child: Center(
+                              child: Text('Booked',
+                                  style: TextStyle(fontSize: 13)))),
+                    ),
                   ),
                 ],
               ),
