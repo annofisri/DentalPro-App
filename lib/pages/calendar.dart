@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dental/components/drawer.dart';
 import 'package:dental/services/appointment.service.dart';
 import 'package:dental/services/calendar.service.dart';
@@ -77,6 +79,8 @@ class _CalendarPageState extends State<CalendarPage> {
     var data = await AppointmentService().getAppointmentData(tempDay) ??
         {'content': []};
     dayAppointmentData = await data['content'];
+    print(dayAppointmentData);
+    print(dayAppointmentData[0]['treatment_time'].toString());
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -84,12 +88,8 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   String dateConverter(date) {
-    String dateString = date;
-    DateTime dateTime = DateTime.parse(dateString);
-
-    // Format the DateTime object as "MMM d, y" (e.g., "Jun 1, 2024")
-    String formattedDate = DateFormat('MMM d, y').format(dateTime);
-    return formattedDate;
+    return DateFormat('E, MMM dd', 'en_US')
+        .format(DateTime.parse('2024-01-10'));
   }
 
   String timeConverter(time) {
@@ -253,26 +253,36 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    dayAppointmentData[index]
-                                                        ['doctor_name'],
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Color.fromRGBO(
-                                                            33, 82, 90, 1)),
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
                                                     dateConverter(
                                                         dayAppointmentData[
                                                                 index][
                                                             'appointment_date']),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: Colors.black),
+                                                    softWrap: true,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 6,
+                                                  ),
+                                                  Text(
+                                                    timeConverter(
+                                                        dayAppointmentData[
+                                                                    index]
+                                                                ['start_time']
+                                                            .toString()),
                                                     style:
                                                         TextStyle(fontSize: 11),
                                                   ),
+                                                  SizedBox(
+                                                    height: 6,
+                                                  ),
                                                   Text(
-                                                    '${timeConverter(dayAppointmentData[index]['start_time'])} - ${timeConverter(dayAppointmentData[index]['end_time'])}',
+                                                    (dayAppointmentData[index]
+                                                            ['treatment_time'])
+                                                        .toString(),
                                                     style:
                                                         TextStyle(fontSize: 13),
                                                   ),
@@ -286,24 +296,53 @@ class _CalendarPageState extends State<CalendarPage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    dayAppointmentData[index]
-                                                        ['patient_name'],
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Color.fromRGBO(
-                                                            5, 5, 5, 1)),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        dayAppointmentData[
+                                                                index]
+                                                            ['patient_name'],
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    5,
+                                                                    5,
+                                                                    5,
+                                                                    1)),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      Text(
+                                                        '(${dayAppointmentData[index]['patient_code']})',
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    5,
+                                                                    5,
+                                                                    5,
+                                                                    0.9)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 6,
                                                   ),
                                                   Text(
-                                                    'Problem:',
+                                                    dayAppointmentData[index]
+                                                        ['treatment_name'],
                                                     style:
                                                         TextStyle(fontSize: 13),
                                                   ),
+                                                  SizedBox(height: 6),
                                                   Text(
-                                                      dayAppointmentData[index]
-                                                          ['chief_problem'],
+                                                      '${dayAppointmentData[index]['title']} ${dayAppointmentData[index]['doctor_name']}',
                                                       style: TextStyle(
                                                           fontSize: 13)),
                                                 ],
