@@ -79,8 +79,6 @@ class _CalendarPageState extends State<CalendarPage> {
     var data = await AppointmentService().getAppointmentData(tempDay) ??
         {'content': []};
     dayAppointmentData = await data['content'];
-    print(dayAppointmentData);
-    print(dayAppointmentData[0]['treatment_time'].toString());
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -216,7 +214,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                   itemCount: dayAppointmentData.length,
                                   itemBuilder: (context, index) {
                                     return Container(
-                                        height: 120,
+                                        height: 100,
                                         margin:
                                             EdgeInsets.fromLTRB(0, 0, 0, 10),
                                         padding: EdgeInsets.all(10),
@@ -252,17 +250,55 @@ class _CalendarPageState extends State<CalendarPage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    dateConverter(
-                                                        dayAppointmentData[
-                                                                index][
-                                                            'appointment_date']),
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: Colors.black),
-                                                    softWrap: true,
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        dateConverter(
+                                                            dayAppointmentData[
+                                                                    index][
+                                                                'appointment_date']),
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            color:
+                                                                Colors.black),
+                                                        softWrap: true,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      dayAppointmentData[index][
+                                                                  'appointment_status'] ==
+                                                              'Booked'
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                      2),
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  border: Border.all(
+                                                                      width:
+                                                                          0.5,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      style: BorderStyle
+                                                                          .solid),
+                                                                  borderRadius: BorderRadius.all(
+                                                                      Radius.circular(
+                                                                          20))),
+                                                              child: Text('BO'))
+                                                          : dayAppointmentData[index]['appointment_status'] ==
+                                                                  'Rescheduled'
+                                                              ? Container(
+                                                                  padding: EdgeInsets.all(2),
+                                                                  decoration: BoxDecoration(color: Colors.yellow, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                                  child: Text('RE'))
+                                                              : dayAppointmentData[index]['appointment_status'] == 'Completed'
+                                                                  ? Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.green, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CO'))
+                                                                  : Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.red, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CA'))
+                                                    ],
                                                   ),
                                                   SizedBox(
                                                     height: 6,
