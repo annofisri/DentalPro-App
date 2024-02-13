@@ -19,9 +19,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Notificationservice notificationservice = Notificationservice();
   var notificationData = [];
-  var dashboardData;
-  var appointmentData;
-  List<String> next7Days = [];
+  var dashboardData = [];
+  var appointmentData = [];
+  var next7Days = [];
   String selectedDay = '';
 
   @override
@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage> {
     selectedDay = next7Days[0];
 
     getAppointmentData();
+    print(next7Days);
   }
 
   void setSelectedDay(day) {

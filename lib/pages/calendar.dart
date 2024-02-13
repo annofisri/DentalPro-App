@@ -20,10 +20,12 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   var monthAppointmentData = [];
+  var dayAppointmentData = [];
   var fromDate = '';
   var toDate = '';
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.utc(2024, 01, 02);
+  DateTime _focusedDay = DateTime.utc(2024, 01, 02);
+  DateTime _lastSelectedDay = DateTime.utc(2024, 01, 02);
   Map<DateTime, List<Event>> events = {};
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
@@ -46,6 +48,8 @@ class _CalendarPageState extends State<CalendarPage> {
         .format(DateTime(DateTime.now().year, DateTime.now().month + 1, 0));
 
     getMonthAppointmentData();
+    getEvents();
+    getAppointmentsForTheDay();
   }
 
   getMonthAppointmentData() async {
@@ -72,7 +76,7 @@ class _CalendarPageState extends State<CalendarPage> {
         .format(DateTime.parse(_selectedDay.toString()));
     var data = await AppointmentService().getAppointmentData(tempDay) ??
         {'content': []};
-    monthAppointmentData = await data['content'];
+    dayAppointmentData = await data['content'];
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -168,6 +172,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
+                  print(_selectedDay);
+                  print(_focusedDay);
                 });
               },
             ),
@@ -180,7 +186,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       height: 100, child: Center(child: Text('Loading...')));
                 } else {
                   // ignore: unnecessary_null_comparison
-                  return monthAppointmentData.length > 0
+                  return dayAppointmentData.length > 0
                       ? Column(
                           children: [
                             SizedBox(
@@ -188,7 +194,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             ),
                             Center(
                                 child: Text(
-                              '${monthAppointmentData.length} appointment record(s)',
+                              '${dayAppointmentData.length} appointment record(s)',
                               style: TextStyle(
                                   color: Color.fromRGBO(54, 135, 147, 1),
                                   fontWeight: FontWeight.w700),
@@ -199,7 +205,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             Container(
                               height: 400,
                               child: ListView.builder(
-                                  itemCount: monthAppointmentData.length,
+                                  itemCount: dayAppointmentData.length,
                                   itemBuilder: (context, index) {
                                     return Container(
                                         height: 120,
@@ -239,7 +245,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    monthAppointmentData[index]
+                                                    dayAppointmentData[index]
                                                         ['doctor_name'],
                                                     style: TextStyle(
                                                         fontSize: 16,
@@ -251,14 +257,14 @@ class _CalendarPageState extends State<CalendarPage> {
                                                   ),
                                                   Text(
                                                     dateConverter(
-                                                        monthAppointmentData[
+                                                        dayAppointmentData[
                                                                 index][
                                                             'appointment_date']),
                                                     style:
                                                         TextStyle(fontSize: 11),
                                                   ),
                                                   Text(
-                                                    '${timeConverter(monthAppointmentData[index]['start_time'])} - ${timeConverter(monthAppointmentData[index]['end_time'])}',
+                                                    '${timeConverter(dayAppointmentData[index]['start_time'])} - ${timeConverter(dayAppointmentData[index]['end_time'])}',
                                                     style:
                                                         TextStyle(fontSize: 13),
                                                   ),
@@ -273,7 +279,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    monthAppointmentData[index]
+                                                    dayAppointmentData[index]
                                                         ['patient_name'],
                                                     style: TextStyle(
                                                         fontSize: 16,
@@ -288,8 +294,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                         TextStyle(fontSize: 13),
                                                   ),
                                                   Text(
-                                                      monthAppointmentData[
-                                                              index]
+                                                      dayAppointmentData[index]
                                                           ['chief_problem'],
                                                       style: TextStyle(
                                                           fontSize: 13)),
