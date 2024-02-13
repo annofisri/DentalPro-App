@@ -97,7 +97,6 @@ class _NavDrawerState extends State<NavDrawer> {
                               ConnectionState.waiting) {
                             return Text('loading');
                           } else if (snapshot.hasError) {
-                            print('Error: ${snapshot.error}');
                             return Text('Error: ${snapshot.error}');
                           } else {
                             return ClipOval(

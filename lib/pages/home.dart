@@ -91,7 +91,6 @@ class _HomePageState extends State<HomePage> {
     selectedDay = next7Days[0];
 
     getAppointmentData();
-    print(next7Days);
   }
 
   void setSelectedDay(day) {
@@ -108,7 +107,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       appointmentData = data['content'];
     });
-    print(appointmentData);
   }
 
   void goToNotification() {

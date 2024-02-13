@@ -23,9 +23,9 @@ class _CalendarPageState extends State<CalendarPage> {
   var dayAppointmentData = [];
   var fromDate = '';
   var toDate = '';
-  DateTime _selectedDay = DateTime.utc(2024, 01, 02);
-  DateTime _focusedDay = DateTime.utc(2024, 01, 02);
-  DateTime _lastSelectedDay = DateTime.utc(2024, 01, 02);
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  DateTime _lastSelectedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
@@ -72,7 +72,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   getAppointmentsForTheDay() async {
-    var tempDay = DateFormat('yyyy-MM-dd')
+    var tempDay = await DateFormat('yyyy-MM-dd')
         .format(DateTime.parse(_selectedDay.toString()));
     var data = await AppointmentService().getAppointmentData(tempDay) ??
         {'content': []};
@@ -80,7 +80,6 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    // print("Events for $day: ${events[day]}");
     return events[day] ?? [];
   }
 
@@ -126,12 +125,23 @@ class _CalendarPageState extends State<CalendarPage> {
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30))),
             child: TableCalendar(
+              onPageChanged: (focusedDay) async {
+                _focusedDay = focusedDay;
+                _selectedDay = focusedDay;
+
+                fromDate = await DateFormat('yyyy-MM-dd')
+                    .format(DateTime(focusedDay.year, focusedDay.month, 1));
+                toDate = await DateFormat('yyyy-MM-dd')
+                    .format(DateTime(focusedDay.year, focusedDay.month + 1, 0));
+
+                getMonthAppointmentData();
+              },
               eventLoader: (day) {
                 return _getEventsForDay(day);
               },
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: DateTime.now(),
+              focusedDay: _focusedDay,
               calendarStyle: CalendarStyle(
                 defaultTextStyle: TextStyle(color: Colors.white),
                 selectedTextStyle: TextStyle(color: Colors.black),
@@ -172,8 +182,6 @@ class _CalendarPageState extends State<CalendarPage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
-                  print(_selectedDay);
-                  print(_focusedDay);
                 });
               },
             ),

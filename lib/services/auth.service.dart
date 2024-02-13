@@ -36,8 +36,6 @@ class AuthService {
       }
     }
 
-    print(id);
-
     var data = {
       "current_password": oldPassword,
       "password": newPassword,
@@ -55,7 +53,6 @@ class AuthService {
   }
 
   Future getUserImage(token, id, baseUrl) async {
-    print('$baseUrl/master/profilePics/$id');
     final response = await http.get(
       Uri.parse('$baseUrl/master/profilePics/$id'),
       headers: {
