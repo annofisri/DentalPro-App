@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/appointment.details.dart';
 import 'package:dental/services/appointment.service.dart';
 import 'package:dental/services/calendar.service.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +26,7 @@ class _CalendarPageState extends State<CalendarPage> {
   var toDate = '';
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  DateTime _lastSelectedDay = DateTime.now();
+  // DateTime _lastSelectedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
@@ -98,6 +97,14 @@ class _CalendarPageState extends State<CalendarPage> {
     // Format the DateTime object as "h:mm a" (e.g., "12:42 PM")
     String formattedTime = DateFormat('h:mm a').format(dateTime);
     return formattedTime;
+  }
+
+  goToAppointmentDetailsPage(appointment) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AppointmentDetailsPage(appointment)),
+    );
   }
 
   @override
@@ -213,179 +220,184 @@ class _CalendarPageState extends State<CalendarPage> {
                               child: ListView.builder(
                                   itemCount: dayAppointmentData.length,
                                   itemBuilder: (context, index) {
-                                    return Container(
-                                        height: 100,
-                                        margin:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: index % 2 != 0
-                                              ? Colors.white
-                                              : Color.fromRGBO(
-                                                  199, 233, 238, 1),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.1),
-                                              spreadRadius: 1,
-                                              blurRadius: 2,
-                                              offset: Offset(0, 1),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 10, 0),
-                                              width: 150,
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      right: BorderSide(
-                                                          width: 2,
-                                                          color:
-                                                              Colors.white))),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        dateConverter(
-                                                            dayAppointmentData[
-                                                                    index][
-                                                                'appointment_date']),
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color:
-                                                                Colors.black),
-                                                        softWrap: true,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 6,
-                                                      ),
-                                                      dayAppointmentData[index][
-                                                                  'appointment_status'] ==
-                                                              'Booked'
-                                                          ? Container(
-                                                              padding:
-                                                                  EdgeInsets.all(
-                                                                      2),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  border: Border.all(
-                                                                      width:
-                                                                          0.5,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      style: BorderStyle
-                                                                          .solid),
-                                                                  borderRadius: BorderRadius.all(
-                                                                      Radius.circular(
-                                                                          20))),
-                                                              child: Text('BO'))
-                                                          : dayAppointmentData[index]['appointment_status'] ==
-                                                                  'Rescheduled'
-                                                              ? Container(
-                                                                  padding: EdgeInsets.all(2),
-                                                                  decoration: BoxDecoration(color: Colors.yellow, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))),
-                                                                  child: Text('RE'))
-                                                              : dayAppointmentData[index]['appointment_status'] == 'Completed'
-                                                                  ? Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.green, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CO'))
-                                                                  : Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.red, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CA'))
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                    timeConverter(
-                                                        dayAppointmentData[
-                                                                    index]
-                                                                ['start_time']
-                                                            .toString()),
-                                                    style:
-                                                        TextStyle(fontSize: 11),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                    (dayAppointmentData[index]
-                                                            ['treatment_time'])
-                                                        .toString(),
-                                                    style:
-                                                        TextStyle(fontSize: 13),
-                                                  ),
-                                                ],
+                                    return GestureDetector(
+                                      onTap: () => goToAppointmentDetailsPage(
+                                          dayAppointmentData[index]),
+                                      child: Container(
+                                          height: 100,
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: index % 2 != 0
+                                                ? Colors.white
+                                                : Color.fromRGBO(
+                                                    199, 233, 238, 1),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                spreadRadius: 1,
+                                                blurRadius: 2,
+                                                offset: Offset(0, 1),
                                               ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10, 0, 0, 0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        dayAppointmentData[
-                                                                index]
-                                                            ['patient_name'],
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                            ],
+                                          ),
+                                          child: ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 10, 0),
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        right: BorderSide(
+                                                            width: 2,
                                                             color:
-                                                                Color.fromRGBO(
-                                                                    5,
-                                                                    5,
-                                                                    5,
-                                                                    1)),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 6,
-                                                      ),
-                                                      Text(
-                                                        '(${dayAppointmentData[index]['patient_code']})',
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color:
-                                                                Color.fromRGBO(
-                                                                    5,
-                                                                    5,
-                                                                    5,
-                                                                    0.9)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                    dayAppointmentData[index]
-                                                        ['treatment_name'],
-                                                    style:
-                                                        TextStyle(fontSize: 13),
-                                                  ),
-                                                  SizedBox(height: 6),
-                                                  Text(
-                                                      '${dayAppointmentData[index]['title']} ${dayAppointmentData[index]['doctor_name']}',
+                                                                Colors.white))),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          dateConverter(
+                                                              dayAppointmentData[
+                                                                      index][
+                                                                  'appointment_date']),
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color:
+                                                                  Colors.black),
+                                                          softWrap: true,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        dayAppointmentData[index]['appointment_status'] ==
+                                                                'Booked'
+                                                            ? Container(
+                                                                padding:
+                                                                    EdgeInsets.all(
+                                                                        2),
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    border: Border.all(
+                                                                        width:
+                                                                            0.5,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        style: BorderStyle
+                                                                            .solid),
+                                                                    borderRadius:
+                                                                        BorderRadius.all(Radius.circular(
+                                                                            20))),
+                                                                child:
+                                                                    Text('BO'))
+                                                            : dayAppointmentData[index]['appointment_status'] ==
+                                                                    'Rescheduled'
+                                                                ? Container(
+                                                                    padding: EdgeInsets.all(2),
+                                                                    decoration: BoxDecoration(color: Colors.yellow, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))),
+                                                                    child: Text('RE'))
+                                                                : dayAppointmentData[index]['appointment_status'] == 'Completed'
+                                                                    ? Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.green, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CO'))
+                                                                    : Container(padding: EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.red, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))), child: Text('CA'))
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 6,
+                                                    ),
+                                                    Text(
+                                                      timeConverter(
+                                                          dayAppointmentData[
+                                                                      index]
+                                                                  ['start_time']
+                                                              .toString()),
                                                       style: TextStyle(
-                                                          fontSize: 13)),
-                                                ],
+                                                          fontSize: 11),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 6,
+                                                    ),
+                                                    Text(
+                                                      (dayAppointmentData[index]
+                                                              [
+                                                              'treatment_time'])
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ));
+                                              Container(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    10, 0, 0, 0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          dayAppointmentData[
+                                                                  index]
+                                                              ['patient_name'],
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color: Color
+                                                                  .fromRGBO(5,
+                                                                      5, 5, 1)),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        Text(
+                                                          '(${dayAppointmentData[index]['patient_code']})',
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      5,
+                                                                      5,
+                                                                      5,
+                                                                      0.9)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 6,
+                                                    ),
+                                                    Text(
+                                                      dayAppointmentData[index]
+                                                          ['treatment_name'],
+                                                      style: TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                    SizedBox(height: 6),
+                                                    Text(
+                                                        '${dayAppointmentData[index]['title']} ${dayAppointmentData[index]['doctor_name']}',
+                                                        style: TextStyle(
+                                                            fontSize: 13)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                    );
                                   }),
                             ),
                           ],
