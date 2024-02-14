@@ -65,6 +65,7 @@ class _NavDrawerState extends State<NavDrawer> {
     }
     setState(() {
       activeUser = user;
+      print(activeUser);
     });
   }
 
@@ -88,21 +89,28 @@ class _NavDrawerState extends State<NavDrawer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child: CircleAvatar(
-                      radius: 40,
-                      child: FutureBuilder<Uint8List>(
-                        future: DrawerService().fetchBlobImage(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Text('loading');
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            return ClipOval(
-                                child: Image.memory(snapshot.data!));
-                          }
-                        },
+                    child: Container(
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.transparent,
+                        child: FutureBuilder<Uint8List>(
+                          future: DrawerService()
+                              .fetchBlobImage(activeUser['userId']),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Text('loading');
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return ClipOval(
+                                  child: Image.memory(
+                                snapshot.data!,
+                                fit: BoxFit.cover,
+                              ));
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),

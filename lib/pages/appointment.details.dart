@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:dental/components/drawer.dart';
+import 'package:dental/services/drawer.service.dart';
 import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
 
@@ -36,9 +39,28 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           margin: EdgeInsets.fromLTRB(16, 10, 16, 0),
           child: Row(
             children: [
-              Icon(
-                Icons.image,
-                size: 40,
+              Center(
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.transparent,
+                  child: FutureBuilder<Uint8List>(
+                    future: DrawerService()
+                        .fetchBlobImage(widget.appointment['doctor_id']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('loading');
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return ClipOval(
+                            child: Image.memory(
+                          snapshot.data!,
+                          fit: BoxFit.cover,
+                        ));
+                      }
+                    },
+                  ),
+                ),
               ),
               SizedBox(
                 width: 6,

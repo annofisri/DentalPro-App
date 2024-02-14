@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerService {
-  Future<Uint8List> fetchBlobImage() async {
+  Future<Uint8List> fetchBlobImage(id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? userList = prefs.getStringList('userList') ?? [];
     String? api;
@@ -22,7 +22,7 @@ class DrawerService {
     final Uint8List error = Uint8List(10);
 
     String apiUrl =
-        '$api/master/profilePics/2'; // Replace with your API endpoint
+        '$api/master/profilePics/${id}'; // Replace with your API endpoint
 
     try {
       http.Response response = await http.get(Uri.parse(apiUrl), headers: {
