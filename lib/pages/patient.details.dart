@@ -1,6 +1,7 @@
 import 'package:dental/components/drawer.dart';
 import 'package:dental/services/patient.service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PatientDetailsPage extends StatefulWidget {
   final id;
@@ -395,10 +396,9 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            'assets/health_record_logo.png', // Replace with your image path
+                          SvgPicture.asset(
+                            'assets/health_record.svg', // Replace with your image path
                             width: 18, // Set the desired height for the image
-                            fit: BoxFit.contain,
                           ),
                           SizedBox(
                             width: 6,
