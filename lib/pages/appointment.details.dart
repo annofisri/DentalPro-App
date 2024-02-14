@@ -50,9 +50,15 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     '${widget.appointment['title']} ${widget.appointment['doctor_name']}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
-                  Text(
-                    '${widget.appointment['qualification']} | - ${widget.appointment['specialization']}',
-                    style: TextStyle(fontSize: 13),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: Text(
+                      '${widget.appointment['qualification']} | - ${widget.appointment['specialization']}',
+                      style: TextStyle(fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      softWrap: false,
+                    ),
                   ),
                 ],
               )
