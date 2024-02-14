@@ -18,8 +18,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
   @override
   void initState() {
     super.initState();
-
-    print(widget.appointment);
   }
 
   goToPatientInfoPage() {
