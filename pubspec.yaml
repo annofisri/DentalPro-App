@@ -83,6 +83,9 @@ flutter:
     - assets/login_logo.svg
     - assets/app-logo.svg
     - assets/teeth_background.png
+    - assets/health_record_logo.png
+    - assets/arrow_right.png
+    - assets/dental_surgery.png
     - android/app/src/main/res/mipmap-hdpi/ic_launcher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

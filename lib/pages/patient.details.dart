@@ -381,6 +381,117 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                     height: 6,
                   ),
                 ),
+                SizedBox(
+                  height: 12,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(199, 233, 238, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/health_record_logo.png', // Replace with your image path
+                            width: 18, // Set the desired height for the image
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            'Electronic Health Record',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Image.asset(
+                        'assets/arrow_right.png', // Replace with your image path
+                        width: 18, // Set the desired height for the image
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(199, 233, 238, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/dental_surgery.png', // Replace with your image path
+                            width: 24, // Set the desired width for the image
+                            fit: BoxFit
+                                .fitHeight, // Use 'contain' to maintain the aspect ratio
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            'Lab Work',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Image.asset(
+                        'assets/arrow_right.png', // Replace with your image path
+                        width: 18, // Set the desired height for the image
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(16, 0, 16, 10),
+                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(199, 233, 238, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          // Image.asset(
+                          //   'assets/dental_surgery.png', // Replace with your image path
+                          //   width: 24, // Set the desired width for the image
+                          //   fit: BoxFit
+                          //       .fitHeight, // Use 'contain' to maintain the aspect ratio
+                          // ),
+                          Icon(Icons.attach_file),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            'Attachments',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Image.asset(
+                        'assets/arrow_right.png', // Replace with your image path
+                        width: 18, // Set the desired height for the image
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  ),
+                )
               ],
             )
           : Center(child: Text('Unable to load Patient')),
