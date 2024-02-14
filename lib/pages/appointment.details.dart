@@ -56,6 +56,13 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                             child: Image.memory(
                           snapshot.data!,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons
+                                  .image, // Display Icon if image is not available
+                              color: Colors.grey,
+                            );
+                          },
                         ));
                       }
                     },
