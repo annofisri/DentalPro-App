@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/patient.details.dart';
 import 'package:dental/services/drawer.service.dart';
 import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,15 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
     super.initState();
 
     print(widget.appointment);
+  }
+
+  goToPatientInfoPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              PatientDetailsPage(widget.appointment['patient_id'])),
+    );
   }
 
   @override
@@ -158,8 +168,16 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     style: TextStyle(fontSize: 13),
                   )),
                   Expanded(
-                    child: Text(widget.appointment['patient_name'],
-                        style: TextStyle(fontSize: 13)),
+                    child: GestureDetector(
+                      onTap: () => goToPatientInfoPage(),
+                      child: Text(
+                        widget.appointment['patient_name'],
+                        style: TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
                   ),
                 ],
               ),

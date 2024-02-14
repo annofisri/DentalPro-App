@@ -327,9 +327,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                       height: 6,
                                                     ),
                                                     Text(
-                                                      (dayAppointmentData[index]
-                                                              [
-                                                              'treatment_time'])
+                                                      ('${dayAppointmentData[index]['treatment_time']} min')
                                                           .toString(),
                                                       style: TextStyle(
                                                           fontSize: 13),

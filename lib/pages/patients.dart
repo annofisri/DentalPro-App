@@ -51,7 +51,8 @@ class _PatientPageState extends State<PatientPage> {
   goToPatientDetailsPage(patient) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => PatientDetailsPage(patient)),
+      MaterialPageRoute(
+          builder: (context) => PatientDetailsPage(patient['id'])),
     );
   }
 
