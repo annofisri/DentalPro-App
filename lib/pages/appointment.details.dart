@@ -270,20 +270,65 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
                     'Status',
                     style: TextStyle(fontSize: 13),
                   )),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(117, 255, 156, 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                          child: Center(
-                              child: Text('Booked',
-                                  style: TextStyle(fontSize: 13)))),
-                    ),
-                  ),
+                  widget.appointment['appointment_status'] == 'Booked'
+                      ? Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    color: Color.fromRGBO(117, 255, 156, 1),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Center(
+                                    child: Text('Booked',
+                                        style: TextStyle(fontSize: 13)))),
+                          ),
+                        )
+                      : widget.appointment['appointment_status'] == 'Cancelled'
+                          ? Expanded(
+                              child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  child: Center(
+                                      child: Text('Cancelled',
+                                          style: TextStyle(fontSize: 13)))),
+                            ))
+                          : widget.appointment['appointment_status'] ==
+                                  'Reschedule'
+                              ? Expanded(
+                                  child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      width: 95,
+                                      decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(117, 255, 156, 1),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      child: Center(
+                                          child: Text('Rescheduled',
+                                              style: TextStyle(fontSize: 13)))),
+                                ))
+                              : Expanded(
+                                  child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(226, 232, 240, 1),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      child: Center(
+                                          child: Text('Completed',
+                                              style: TextStyle(fontSize: 13)))),
+                                ))
                 ],
               ),
               SizedBox(
@@ -327,6 +372,54 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
             ],
           ),
         ),
+        SizedBox(
+          height: 16,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Colors.red),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: Text(
+                'Cancel Appt',
+                style: TextStyle(fontSize: 14, color: Colors.red),
+              ),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: Text(
+                'Re-Schedule',
+                style: TextStyle(
+                    fontSize: 14, color: Color.fromRGBO(37, 94, 102, 1)),
+              ),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(37, 94, 102, 1),
+                  border: Border.all(
+                      width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: Text(
+                'Complete',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ),
+          ],
+        )
       ]),
       drawer: NavDrawer(),
     );

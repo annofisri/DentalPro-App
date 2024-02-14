@@ -301,7 +301,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                 child:
                                                                     Text('BO'))
                                                             : dayAppointmentData[index]['appointment_status'] ==
-                                                                    'Rescheduled'
+                                                                    'Reschedule'
                                                                 ? Container(
                                                                     padding: EdgeInsets.all(2),
                                                                     decoration: BoxDecoration(color: Colors.yellow, border: Border.all(width: 0.5, color: Colors.black, style: BorderStyle.solid), borderRadius: BorderRadius.all(Radius.circular(20))),
