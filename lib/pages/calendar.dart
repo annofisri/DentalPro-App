@@ -409,6 +409,19 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
       drawer: NavDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Color.fromRGBO(54, 135, 147, 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+              30.0), // Set border radius for rounded shape
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
