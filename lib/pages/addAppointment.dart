@@ -10,7 +10,7 @@ class AddAppointmentPage extends StatefulWidget {
 }
 
 class _AddAppointmentPageState extends State<AddAppointmentPage> {
-  var showNextPage = true;
+  var showNextPage = false;
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
   final TextEditingController contact_no = TextEditingController();
@@ -31,7 +31,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   @override
   void initState() {
     super.initState();
-    showNextPage = true;
+    showNextPage = false;
   }
 
   goToCalendarPage() {
@@ -359,17 +359,21 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(37, 94, 102, 1)),
+                    GestureDetector(
+                      onTap: () => goToCalendarPage(),
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 1,
+                                color: Color.fromRGBO(37, 94, 102, 1)),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(37, 94, 102, 1)),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -857,17 +861,25 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     SizedBox(
                       width: 24,
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Text(
-                        'Next',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(37, 94, 102, 1)),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showNextPage = true;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 1,
+                                color: Color.fromRGBO(37, 94, 102, 1)),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          'Next',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(37, 94, 102, 1)),
+                        ),
                       ),
                     ),
                   ],
