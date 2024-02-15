@@ -21,9 +21,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   final TextEditingController buffer_time = TextEditingController();
   final TextEditingController total_treatment_time = TextEditingController();
   final TextEditingController note = TextEditingController();
+  final TextEditingController appointment_from = TextEditingController();
+  final TextEditingController appointment_to = TextEditingController();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
+  String selectedValue = '';
 
   @override
   void initState() {
@@ -40,6 +43,10 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
   List<Event> _getEventsForDay(DateTime day) {
     return events[day] ?? [];
+  }
+
+  dropDownChange(selectedValue) {
+    print(selectedValue);
   }
 
   @override
@@ -59,6 +66,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           ? ListView(
               children: [
                 Container(
+                    color: Color.fromRGBO(249, 249, 250, 1),
                     padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,9 +175,223 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Available Doctor',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: ButtonTheme(
+                                  alignedDropdown: true,
+                                  child: DropdownButton(
+                                    items: const [
+                                      DropdownMenuItem(
+                                        child: Text('1'),
+                                        value: "1",
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text('2'),
+                                        value: "2",
+                                      ),
+                                    ],
+                                    onChanged: dropDownChange,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Shift Time of Doctor',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(12, 10, 12, 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          spreadRadius: 1,
+                                          blurRadius: 2,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text('08:00 AM - 11:30 AM'),
+                                  )
+                                ],
+                              )
+                            ]),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Appointment Time From',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: appointment_from,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      contentPadding:
+                                          EdgeInsets.fromLTRB(12, 0, 12, 0),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
+                            SizedBox(
+                              width: 24,
+                            ),
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'To',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: contact_no,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor:
+                                          Color.fromRGBO(199, 233, 238, 1),
+                                      contentPadding:
+                                          EdgeInsets.fromLTRB(12, 0, 12, 0),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
                       ],
-                    ))
+                    )),
+                SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromRGBO(37, 94, 102, 1)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(37, 94, 102, 1),
+                          border: Border.all(
+                              width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(fontSize: 14, color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                )
               ],
             )
           : ListView(
