@@ -1,4 +1,5 @@
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/addAppointment.dart';
 import 'package:dental/pages/appointment.details.dart';
 import 'package:dental/services/appointment.service.dart';
 import 'package:dental/services/calendar.service.dart';
@@ -104,6 +105,13 @@ class _CalendarPageState extends State<CalendarPage> {
       context,
       MaterialPageRoute(
           builder: (context) => AppointmentDetailsPage(appointment)),
+    );
+  }
+
+  gotToAddAppointmentPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AddAppointmentPage()),
     );
   }
 
@@ -410,7 +418,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       drawer: NavDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => gotToAddAppointmentPage(),
         child: Icon(
           Icons.add,
           color: Colors.white,
