@@ -1,4 +1,7 @@
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/attachment.dart';
+import 'package:dental/pages/healthrecord.dart';
+import 'package:dental/pages/lab.works.dart';
 import 'package:dental/services/patient.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,6 +30,27 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
     setState(() {
       patient = data ?? {};
     });
+  }
+
+  goToHealthRecordPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HealthRecord(widget.id)),
+    );
+  }
+
+  goToPatientDetails() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LabWorks(widget.id)),
+    );
+  }
+
+  goToAttachment() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AttachmentPage(widget.id)),
+    );
   }
 
   @override
@@ -385,111 +409,120 @@ class _PatientDetailsPageState extends State<PatientDetailsPage> {
                 SizedBox(
                   height: 12,
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(199, 233, 238, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/health_record.svg', // Replace with your image path
-                            width: 18, // Set the desired height for the image
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            'Electronic Health Record',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      Image.asset(
-                        'assets/arrow_right.png', // Replace with your image path
-                        width: 18, // Set the desired height for the image
-                        fit: BoxFit.contain,
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () => goToHealthRecordPage(),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(199, 233, 238, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/health_record.svg', // Replace with your image path
+                              width: 18, // Set the desired height for the image
+                            ),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              'Electronic Health Record',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Image.asset(
+                          'assets/arrow_right.png', // Replace with your image path
+                          width: 18, // Set the desired height for the image
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 12,
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(199, 233, 238, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            'assets/dental_surgery.png', // Replace with your image path
-                            width: 24, // Set the desired width for the image
-                            fit: BoxFit
-                                .fitHeight, // Use 'contain' to maintain the aspect ratio
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            'Lab Work',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      Image.asset(
-                        'assets/arrow_right.png', // Replace with your image path
-                        width: 18, // Set the desired height for the image
-                        fit: BoxFit.contain,
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () => goToPatientDetails(),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(199, 233, 238, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              'assets/dental_surgery.png', // Replace with your image path
+                              width: 24, // Set the desired width for the image
+                              fit: BoxFit
+                                  .fitHeight, // Use 'contain' to maintain the aspect ratio
+                            ),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              'Lab Work',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Image.asset(
+                          'assets/arrow_right.png', // Replace with your image path
+                          width: 18, // Set the desired height for the image
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 12,
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(16, 0, 16, 10),
-                  padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(199, 233, 238, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          // Image.asset(
-                          //   'assets/dental_surgery.png', // Replace with your image path
-                          //   width: 24, // Set the desired width for the image
-                          //   fit: BoxFit
-                          //       .fitHeight, // Use 'contain' to maintain the aspect ratio
-                          // ),
-                          Icon(Icons.attach_file),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            'Attachments',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      Image.asset(
-                        'assets/arrow_right.png', // Replace with your image path
-                        width: 18, // Set the desired height for the image
-                        fit: BoxFit.contain,
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () => goToAttachment(),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(16, 0, 16, 10),
+                    padding: EdgeInsets.fromLTRB(6, 12, 6, 12),
+                    decoration: BoxDecoration(
+                        color: Color.fromRGBO(199, 233, 238, 1),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            // Image.asset(
+                            //   'assets/dental_surgery.png', // Replace with your image path
+                            //   width: 24, // Set the desired width for the image
+                            //   fit: BoxFit
+                            //       .fitHeight, // Use 'contain' to maintain the aspect ratio
+                            // ),
+                            Icon(Icons.attach_file),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              'Attachments',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Image.asset(
+                          'assets/arrow_right.png', // Replace with your image path
+                          width: 18, // Set the desired height for the image
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
