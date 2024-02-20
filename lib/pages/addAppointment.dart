@@ -1,6 +1,8 @@
 import 'package:dental/pages/calendar.dart';
+import 'package:dental/services/dropdownService.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key});
@@ -11,6 +13,7 @@ class AddAppointmentPage extends StatefulWidget {
 
 class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
+  var selectedPatient;
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
   final TextEditingController contact_no = TextEditingController();
@@ -28,10 +31,24 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   Map<DateTime, List<Event>> events = {};
   String selectedValue = '';
 
+  // patient name
+  var patientList = [];
+  // patient name end
+
   @override
   void initState() {
     super.initState();
     showNextPage = false;
+
+    getPatientList();
+  }
+
+  getPatientList() async {
+    var data = await DropDownService().getPatientDropDownList('') ?? [];
+    setState(() {
+      patientList = data;
+      // print(patientList);
+    });
   }
 
   goToCalendarPage() {
@@ -46,7 +63,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   dropDownChange(selectedValue) {
-    print(selectedValue);
+    // print(selectedValue);
   }
 
   @override
@@ -431,20 +448,56 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                               ],
                             ),
-                            child: TextField(
+                            child: TypeAheadField(
                               controller: patient_name,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(12, 0, 12, 0),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                              ),
+                              suggestionsCallback: (pattern) {
+                                print(patientList);
+                                return patientList
+                                    .where((item) => item['name']
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()))
+                                    .toList();
+                              },
+                              builder: (context, patient_name, focusNode) {
+                                return TextField(
+                                  controller: patient_name,
+                                  focusNode: focusNode,
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: InputBorder.none,
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, patient) {
+                                return ListTile(
+                                  title: Text(
+                                      '${patient['name']} (${patient['registration_no']})'),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${patient['contact_number']}'),
+                                      Text('${patient['address']}'),
+                                    ],
+                                  ),
+                                );
+                              },
+                              emptyBuilder: (context) {
+                                // Customize the message when no suggestions are found
+                                return Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text('Please type to Search'));
+                              },
+                              onSelected: (patient) {
+                                print(patient);
+                                selectedPatient = patient;
+                                patient_name.text =
+                                    '${selectedPatient['name']} (${selectedPatient['registration_no']})';
+                              },
                             ),
-                          ),
+                          )
                         ],
                       ),
                       SizedBox(
