@@ -66,6 +66,17 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     // print(selectedValue);
   }
 
+  onPatientSelect(patient) {
+    print(patient);
+    selectedPatient = patient;
+    patient_name.text =
+        '${selectedPatient['name']} (${selectedPatient['registration_no']})';
+    print('${selectedPatient['registration_no']}');
+    patient_code.text = '${selectedPatient['registration_no']}';
+    contact_no.text = '${selectedPatient['contact_number']}';
+    address.text = '${selectedPatient['address']}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -451,7 +462,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                             child: TypeAheadField(
                               controller: patient_name,
                               suggestionsCallback: (pattern) {
-                                print(patientList);
                                 return patientList
                                     .where((item) => item['name']
                                         .toLowerCase()
@@ -491,10 +501,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                     child: Text('Please type to Search'));
                               },
                               onSelected: (patient) {
-                                print(patient);
-                                selectedPatient = patient;
-                                patient_name.text =
-                                    '${selectedPatient['name']} (${selectedPatient['registration_no']})';
+                                onPatientSelect(patient);
                               },
                             ),
                           )
@@ -530,6 +537,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                                 child: TextField(
                                   controller: patient_code,
+                                  enabled: false,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Color.fromRGBO(199, 233, 238, 1),
@@ -572,6 +580,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                                 child: TextField(
                                   controller: contact_no,
+                                  enabled: false,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Color.fromRGBO(199, 233, 238, 1),
@@ -615,6 +624,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                             ),
                             child: TextField(
                               controller: address,
+                              enabled: false,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Color.fromRGBO(199, 233, 238, 1),
