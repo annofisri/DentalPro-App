@@ -189,6 +189,10 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   formatButtonVisible: false,
                                 ),
                                 calendarStyle: CalendarStyle(
+                                  markerDecoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(2))),
                                   selectedDecoration: BoxDecoration(
                                     color: Color.fromRGBO(54, 135, 147, 1),
                                     shape: BoxShape.circle,
