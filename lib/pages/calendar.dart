@@ -27,18 +27,10 @@ class _CalendarPageState extends State<CalendarPage> {
   var toDate = '';
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  // DateTime _lastSelectedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
 
-  // Map<DateTime, List<Event>> events = {
-  //   DateTime.parse('2024-02-17 00:00:00.000Z').toUtc(): [
-  //     Event("Meeting 1"),
-  //     Event("Meeting 2")
-  //   ],
-  //   DateTime.parse('2024-02-18 00:00:00.000Z').toUtc(): [Event("Meeting 3")],
-  // };
   TextEditingController dateInput = TextEditingController();
   @override
   void initState() {

@@ -65,7 +65,6 @@ class _NavDrawerState extends State<NavDrawer> {
     }
     setState(() {
       activeUser = user;
-      print(activeUser);
     });
   }
 

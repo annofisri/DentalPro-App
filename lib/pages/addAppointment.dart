@@ -1,9 +1,17 @@
 import 'package:dental/pages/calendar.dart';
 import 'package:dental/services/dropdownService.dart';
+import 'package:dental/services/holiday.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
+
+class Event {
+  final String eventName;
+
+  Event(this.eventName);
+}
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key});
@@ -30,6 +38,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   Map<DateTime, List<Event>> events = {};
+  final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
   String selectedValue = '';
 
   // patient name
@@ -40,6 +49,10 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var treatmentList = [];
   // treatment end
 
+// calendar
+  var monthHolidayData = [];
+// calendar
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +60,29 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
     getPatientList();
     getTreatmentList();
+    getMonthHolidayData();
+    getEvents();
+  }
+
+  getMonthHolidayData() async {
+    int year = _selectedDay.year;
+    int month = _selectedDay.month;
+    var data = await HolidayService().getHolidayByMonth(month, year);
+    print(data);
+    if (data != null) {
+      setState(() {
+        monthHolidayData = data;
+        getEvents();
+      });
+    }
+  }
+
+  getEvents() {
+    this.monthHolidayData.forEach((holiday) {
+      DateTime date = DateTime.parse('${holiday} 00:00:00.000Z').toUtc();
+      events[date] = [Event("$holiday")];
+      print(events);
+    });
   }
 
   getPatientList() async {
@@ -84,14 +120,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     selectedPatient = patient;
     patient_name.text =
         '${selectedPatient['name']} (${selectedPatient['registration_no']})';
-    print('${selectedPatient['registration_no']}');
     patient_code.text = '${selectedPatient['registration_no']}';
     contact_no.text = '${selectedPatient['contact_number']}';
     address.text = '${selectedPatient['address']}';
   }
 
   onTreatmentSelect(tempTreatment) {
-    print(tempTreatment);
     treatment.text = '${tempTreatment['name']}';
   }
 
@@ -143,7 +177,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   _focusedDay = focusedDay;
                                   _selectedDay = focusedDay;
 
-                                  // getMonthAppointmentData();
+                                  // getMonthHolidayData();
                                 },
                                 eventLoader: (day) {
                                   return _getEventsForDay(day);
