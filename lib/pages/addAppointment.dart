@@ -1,6 +1,7 @@
 import 'package:dental/pages/calendar.dart';
 import 'package:dental/services/dropdownService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -35,18 +36,31 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var patientList = [];
   // patient name end
 
+  // treatment
+  var treatmentList = [];
+  // treatment end
+
   @override
   void initState() {
     super.initState();
     showNextPage = false;
 
     getPatientList();
+    getTreatmentList();
   }
 
   getPatientList() async {
     var data = await DropDownService().getPatientDropDownList('') ?? [];
     setState(() {
       patientList = data;
+      // print(patientList);
+    });
+  }
+
+  getTreatmentList() async {
+    var data = await DropDownService().getTreatmentDropDownList('') ?? [];
+    setState(() {
+      treatmentList = data;
       // print(patientList);
     });
   }
@@ -67,7 +81,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   onPatientSelect(patient) {
-    print(patient);
     selectedPatient = patient;
     patient_name.text =
         '${selectedPatient['name']} (${selectedPatient['registration_no']})';
@@ -75,6 +88,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     patient_code.text = '${selectedPatient['registration_no']}';
     contact_no.text = '${selectedPatient['contact_number']}';
     address.text = '${selectedPatient['address']}';
+  }
+
+  onTreatmentSelect(tempTreatment) {
+    print(tempTreatment);
+    treatment.text = '${tempTreatment['name']}';
   }
 
   @override
@@ -707,18 +725,41 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                               ],
                             ),
-                            child: TextField(
+                            child: TypeAheadField(
                               controller: treatment,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(12, 0, 12, 0),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                              ),
+                              suggestionsCallback: (pattern) {
+                                return treatmentList
+                                    .where((item) => item['name']
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()))
+                                    .toList();
+                              },
+                              builder: (context, treatment, focusNode) {
+                                return TextField(
+                                  controller: treatment,
+                                  focusNode: focusNode,
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: InputBorder.none,
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, treatment) {
+                                return ListTile(
+                                  title: Text('${treatment['name']}'),
+                                );
+                              },
+                              emptyBuilder: (context) {
+                                // Customize the message when no suggestions are found
+                                return Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text('Please type to Search'));
+                              },
+                              onSelected: (treatment) {
+                                onTreatmentSelect(treatment);
+                              },
                             ),
                           ),
                         ],
@@ -753,6 +794,23 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                                 child: TextField(
                                   controller: treatment_time,
+                                  onChanged: (value) {
+                                    if (buffer_time.text != '') {
+                                      total_treatment_time.text =
+                                          ((int.tryParse(treatment_time.text) ??
+                                                          0)
+                                                      .toDouble() +
+                                                  (int.tryParse(buffer_time
+                                                              .text) ??
+                                                          0)
+                                                      .toDouble())
+                                              .toInt()
+                                              .toString();
+                                    }
+                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -795,6 +853,24 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                                 child: TextField(
                                   controller: buffer_time,
+                                  onChanged: (value) {
+                                    if (int.tryParse(treatment_time.text) !=
+                                        null) {
+                                      total_treatment_time.text =
+                                          ((int.tryParse(treatment_time.text) ??
+                                                          0)
+                                                      .toDouble() +
+                                                  (int.tryParse(buffer_time
+                                                              .text) ??
+                                                          0)
+                                                      .toDouble())
+                                              .toInt()
+                                              .toString();
+                                    }
+                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -837,7 +913,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                               ],
                             ),
                             child: TextField(
-                              controller: address,
+                              controller: total_treatment_time,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Color.fromRGBO(199, 233, 238, 1),
