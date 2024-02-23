@@ -74,7 +74,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     int year = _selectedDay.year;
     int month = _selectedDay.month;
     var data = await HolidayService().getHolidayByMonth(month, year);
-    print(data);
+
     if (data != null) {
       setState(() {
         monthHolidayData = data;
@@ -87,7 +87,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     this.monthHolidayData.forEach((holiday) {
       DateTime date = DateTime.parse('${holiday} 00:00:00.000Z').toUtc();
       events[date] = [Event("$holiday")];
-      print(events);
     });
   }
 
@@ -95,7 +94,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var data = await DropDownService().getPatientDropDownList('') ?? [];
     setState(() {
       patientList = data;
-      // print(patientList);
     });
   }
 
@@ -103,7 +101,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var data = await DropDownService().getTreatmentDropDownList('') ?? [];
     setState(() {
       treatmentList = data;
-      // print(patientList);
     });
   }
 
@@ -116,10 +113,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
   List<Event> _getEventsForDay(DateTime day) {
     return events[day] ?? [];
-  }
-
-  dropDownChange(selectedValue) {
-    // print(selectedValue);
   }
 
   onPatientSelect(patient) {
@@ -150,7 +143,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   getAvailableDoctors() async {
-    print(_selectedDay);
     var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
 
     var data =
@@ -183,7 +175,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           setState(() {
             TimeOfDay appointmentToTime = addMinutesToTime(picked, tempTime);
             appointment_to.text = appointmentToTime.format(context);
-            print(appointment_to.text);
           });
         }
       });
@@ -197,6 +188,66 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       hour: totalMinutes ~/ 60,
       minute: totalMinutes % 60,
     );
+  }
+
+  validateFirstPage() {
+    print(patient_name.text);
+    if (patient_name.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Patient Name is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (chief_problem.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Chief Problem is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (treatment.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Treatment is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (treatment_time.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Treatment Time is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (buffer_time.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Buffer Time is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      showNextPage = true;
+    });
   }
 
   @override
@@ -538,6 +589,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   ),
                                   child: TextField(
                                     controller: appointment_to,
+                                    enabled: false,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor:
@@ -1163,9 +1215,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          showNextPage = true;
-                        });
+                        validateFirstPage();
                       },
                       child: Container(
                         padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
