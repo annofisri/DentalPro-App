@@ -1,6 +1,7 @@
 import 'package:dental/pages/calendar.dart';
 import 'package:dental/services/dropdownService.dart';
 import 'package:dental/services/holiday.service.dart';
+import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -24,6 +25,8 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
   var selectedPatient;
   var selectedDoctor;
+  var shiftTimeOfDoctorList = [];
+  var selectedShiftTimeOfDoctor = '';
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
   final TextEditingController contact_no = TextEditingController();
@@ -60,6 +63,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     getTreatmentList();
     getMonthHolidayData();
     getEvents();
+    getAvailableDoctors();
   }
 
   getMonthHolidayData() async {
@@ -126,6 +130,17 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   onDoctorSelect(doctor) {
     selectedDoctor = doctor;
     doctor_name.text = doctor['name'];
+    shiftTimeOfDoctorList = [];
+    setState(() {
+      if (doctor['shifts'].length > 0) {
+        doctor['shifts'].forEach((var shift) {
+          shiftTimeOfDoctorList.add(
+              '${UtilService().timeConverter(shift['start_time'])} - ${UtilService().timeConverter(shift['end_time'])}');
+        });
+      }
+    });
+    print(doctor_name.text);
+    print(shiftTimeOfDoctorList);
   }
 
   onTreatmentSelect(tempTreatment) {
@@ -300,7 +315,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ],
                               ),
                               child: TypeAheadField(
-                                controller: patient_name,
+                                controller: doctor_name,
                                 suggestionsCallback: (pattern) {
                                   return availableDoctorList
                                       .where((item) => item['name']
@@ -359,25 +374,38 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                               SizedBox(
                                 height: 8,
                               ),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(12, 10, 12, 10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: Offset(0, 1),
+                              Container(
+                                height: 50,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      for (int index = 0;
+                                          index < shiftTimeOfDoctorList.length;
+                                          index++)
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(1, 0, 10, 0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              12, 10, 12, 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                spreadRadius: 1,
+                                                blurRadius: 2,
+                                                offset: Offset(0, 1),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Text(
+                                              '${shiftTimeOfDoctorList[index]}'),
                                         ),
-                                      ],
-                                    ),
-                                    child: Text('08:00 AM - 11:30 AM'),
-                                  )
-                                ],
+                                    ],
+                                  ),
+                                ),
                               )
                             ]),
                         SizedBox(
