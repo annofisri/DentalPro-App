@@ -4,6 +4,7 @@ import 'package:dental/services/holiday.service.dart';
 import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
@@ -25,8 +26,10 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
   var selectedPatient;
   var selectedDoctor;
+  // var shiftOfDoctorList = [];
   var shiftTimeOfDoctorList = [];
   var selectedShiftTimeOfDoctor = '';
+
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
   final TextEditingController contact_no = TextEditingController();
@@ -38,7 +41,8 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   final TextEditingController total_treatment_time = TextEditingController();
   final TextEditingController note = TextEditingController();
   final TextEditingController doctor_name = TextEditingController();
-  final TextEditingController appointment_from = TextEditingController();
+  TimeOfDay? appointment_from;
+  final TextEditingController appointment_from_time = TextEditingController();
   final TextEditingController appointment_to = TextEditingController();
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -139,8 +143,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         });
       }
     });
-    print(doctor_name.text);
-    print(shiftTimeOfDoctorList);
   }
 
   onTreatmentSelect(tempTreatment) {
@@ -155,6 +157,46 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         await DropDownService().getAvailableDoctorByDate(modifiedDay) ?? [];
 
     availableDoctorList = data;
+  }
+
+  onShiftSelect(shift) {
+    setState(() {
+      selectedShiftTimeOfDoctor = shift;
+    });
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    var picked = await showTimePicker(
+      context: context,
+      initialTime: appointment_from ?? TimeOfDay.now(),
+    );
+
+    if (picked != null && picked != appointment_from) {
+      setState(() {
+        appointment_from = picked;
+        appointment_from_time.text = '${picked.format(context)}';
+        int? treatmentTime = int.tryParse(treatment_time.text);
+        int? bufferTime = int.tryParse(buffer_time.text);
+
+        if (treatmentTime != null && bufferTime != null) {
+          var tempTime = treatmentTime + bufferTime;
+          setState(() {
+            TimeOfDay appointmentToTime = addMinutesToTime(picked, tempTime);
+            appointment_to.text = appointmentToTime.format(context);
+            print(appointment_to.text);
+          });
+        }
+      });
+    }
+  }
+
+  TimeOfDay addMinutesToTime(originalTime, minutesToAdd) {
+    int totalMinutes =
+        originalTime.hour * 60 + originalTime.minute + minutesToAdd;
+    return TimeOfDay(
+      hour: totalMinutes ~/ 60,
+      minute: totalMinutes % 60,
+    );
   }
 
   @override
@@ -343,7 +385,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            '${doctor['qualification'] ?? ''} | ${doctor['specialization'] ?? ''}'),
+                                            '${doctor['qualification'] ?? ''} ${doctor['qualification'].length > 0 && doctor['specialization'].length > 0 ? '|' : ''} ${doctor['specialization'] ?? ''}'),
                                       ],
                                     ),
                                   );
@@ -383,25 +425,35 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                       for (int index = 0;
                                           index < shiftTimeOfDoctorList.length;
                                           index++)
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(1, 0, 10, 0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              12, 10, 12, 10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.1),
-                                                spreadRadius: 1,
-                                                blurRadius: 2,
-                                                offset: Offset(0, 1),
-                                              ),
-                                            ],
+                                        GestureDetector(
+                                          onTap: () => onShiftSelect(
+                                              shiftTimeOfDoctorList[index]),
+                                          child: Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                1, 0, 10, 0),
+                                            padding: EdgeInsets.fromLTRB(
+                                                12, 10, 12, 10),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  selectedShiftTimeOfDoctor ==
+                                                          shiftTimeOfDoctorList[
+                                                              index]
+                                                      ? const Color.fromARGB(
+                                                          255, 154, 197, 155)
+                                                      : Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.1),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0, 1),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Text(
+                                                '${shiftTimeOfDoctorList[index]}'),
                                           ),
-                                          child: Text(
-                                              '${shiftTimeOfDoctorList[index]}'),
                                         ),
                                     ],
                                   ),
@@ -437,17 +489,21 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                       ),
                                     ],
                                   ),
-                                  child: TextField(
-                                    controller: appointment_from,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(12, 0, 12, 0),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
+                                  child: GestureDetector(
+                                    onTap: () => _selectTime(context),
+                                    child: TextField(
+                                      controller: appointment_from_time,
+                                      enabled: false,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding:
+                                            EdgeInsets.fromLTRB(12, 0, 12, 0),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -481,7 +537,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                     ],
                                   ),
                                   child: TextField(
-                                    controller: contact_no,
+                                    controller: appointment_to,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor:
