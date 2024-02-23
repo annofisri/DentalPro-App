@@ -61,4 +61,34 @@ class DropDownService {
       throw Exception('Failed to load items');
     }
   }
+
+  getAvailableDoctorByDate(date) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? userList = prefs.getStringList('userList') ?? [];
+    String? api;
+    String? token;
+    for (String userInfoString in userList) {
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      if (userInfo['active'] == true) {
+        token = userInfo['token'];
+        api = userInfo['api'];
+        break;
+      }
+    }
+
+    final response = await http.get(
+      Uri.parse('$api/appointment/availableDoctors/$date'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // ignore: avoid_print
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load items');
+    }
+  }
 }

@@ -23,6 +23,7 @@ class AddAppointmentPage extends StatefulWidget {
 class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
   var selectedPatient;
+  var selectedDoctor;
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
   final TextEditingController contact_no = TextEditingController();
@@ -33,6 +34,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   final TextEditingController buffer_time = TextEditingController();
   final TextEditingController total_treatment_time = TextEditingController();
   final TextEditingController note = TextEditingController();
+  final TextEditingController doctor_name = TextEditingController();
   final TextEditingController appointment_from = TextEditingController();
   final TextEditingController appointment_to = TextEditingController();
   DateTime _focusedDay = DateTime.now();
@@ -41,17 +43,13 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
   String selectedValue = '';
 
-  // patient name
   var patientList = [];
-  // patient name end
 
-  // treatment
   var treatmentList = [];
-  // treatment end
 
-// calendar
   var monthHolidayData = [];
-// calendar
+
+  var availableDoctorList = [];
 
   @override
   void initState() {
@@ -125,8 +123,23 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     address.text = '${selectedPatient['address']}';
   }
 
+  onDoctorSelect(doctor) {
+    selectedDoctor = doctor;
+    doctor_name.text = doctor['name'];
+  }
+
   onTreatmentSelect(tempTreatment) {
     treatment.text = '${tempTreatment['name']}';
+  }
+
+  getAvailableDoctors() async {
+    print(_selectedDay);
+    var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
+
+    var data =
+        await DropDownService().getAvailableDoctorByDate(modifiedDay) ?? [];
+
+    availableDoctorList = data;
   }
 
   @override
@@ -177,7 +190,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   _focusedDay = focusedDay;
                                   _selectedDay = focusedDay;
 
-                                  // getMonthHolidayData();
+                                  getMonthHolidayData();
                                 },
                                 eventLoader: (day) {
                                   return _getEventsForDay(day);
@@ -208,6 +221,8 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   setState(() {
                                     _selectedDay = selectedDay;
                                     _focusedDay = focusedDay;
+
+                                    getAvailableDoctors();
                                   });
                                 },
                                 selectedDayPredicate: (DateTime date) {
@@ -274,9 +289,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                               height: 8,
                             ),
                             Container(
-                              width: double.infinity,
                               decoration: BoxDecoration(
-                                color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
@@ -286,23 +299,49 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                   ),
                                 ],
                               ),
-                              child: DropdownButtonHideUnderline(
-                                child: ButtonTheme(
-                                  alignedDropdown: true,
-                                  child: DropdownButton(
-                                    items: const [
-                                      DropdownMenuItem(
-                                        child: Text('1'),
-                                        value: "1",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text('2'),
-                                        value: "2",
-                                      ),
-                                    ],
-                                    onChanged: dropDownChange,
-                                  ),
-                                ),
+                              child: TypeAheadField(
+                                controller: patient_name,
+                                suggestionsCallback: (pattern) {
+                                  return availableDoctorList
+                                      .where((item) => item['name']
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()))
+                                      .toList();
+                                },
+                                builder: (context, doctor_name, focusNode) {
+                                  return TextField(
+                                    controller: doctor_name,
+                                    focusNode: focusNode,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: InputBorder.none,
+                                    ),
+                                  );
+                                },
+                                itemBuilder: (context, doctor) {
+                                  return ListTile(
+                                    title: Text('${doctor['name']}'),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            '${doctor['qualification'] ?? ''} | ${doctor['specialization'] ?? ''}'),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                emptyBuilder: (context) {
+                                  // Customize the message when no suggestions are found
+                                  return Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text('Please type to Search'));
+                                },
+                                onSelected: (doctor) {
+                                  onDoctorSelect(doctor);
+                                },
                               ),
                             ),
                           ],
