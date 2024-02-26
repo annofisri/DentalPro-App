@@ -1,4 +1,5 @@
 import 'package:dental/pages/calendar.dart';
+import 'package:dental/services/details.service.dart';
 import 'package:dental/services/dropdownService.dart';
 import 'package:dental/services/holiday.service.dart';
 import 'package:dental/services/util.services.dart';
@@ -26,8 +27,9 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
   var selectedPatient;
   var selectedDoctor;
-  // var shiftOfDoctorList = [];
+  var shiftOfDoctorList = [];
   var shiftTimeOfDoctorList = [];
+  var bookedSlotsList = [];
   var selectedShiftTimeOfDoctor = '';
 
   final TextEditingController patient_name = TextEditingController();
@@ -128,18 +130,33 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     selectedDoctor = doctor;
     doctor_name.text = doctor['name'];
     shiftTimeOfDoctorList = [];
+    shiftOfDoctorList = [];
+
     setState(() {
       if (doctor['shifts'].length > 0) {
         doctor['shifts'].forEach((var shift) {
           shiftTimeOfDoctorList.add(
               '${UtilService().timeConverter(shift['start_time'])} - ${UtilService().timeConverter(shift['end_time'])}');
+          shiftOfDoctorList.add(shift);
         });
       }
     });
   }
 
-  onTreatmentSelect(tempTreatment) {
+  onTreatmentSelect(tempTreatment) async {
+    print(tempTreatment);
     treatment.text = '${tempTreatment['name']}';
+
+    var data =
+        await DetailService().getTreatmentDetailsById(tempTreatment['id']) ??
+            null;
+
+    if (data != null) {
+      treatment_time.text = '${data['duration'].toInt()}';
+      buffer_time.text = '${data['bufferTime'].toInt()}';
+      total_treatment_time.text =
+          '${(data['duration'] + data['bufferTime']).toInt()}';
+    }
   }
 
   getAvailableDoctors() async {
@@ -151,9 +168,17 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     availableDoctorList = data;
   }
 
-  onShiftSelect(shift) {
+  onShiftSelect(shift, index) {
+    bookedSlotsList = [];
+    print('tes3t');
     setState(() {
       selectedShiftTimeOfDoctor = shift;
+      shiftOfDoctorList[index]['booked_slots'].forEach((slot) {
+        bookedSlotsList.add(
+            '${UtilService().timeConverter(slot['start_time'])} - ${UtilService().timeConverter(slot['end_time'])}');
+        print(bookedSlotsList);
+        print('test');
+      });
     });
   }
 
@@ -248,6 +273,19 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     setState(() {
       showNextPage = true;
     });
+  }
+
+  saveAppointment() {
+    if (doctor_name.text.length == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a Doctor!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
   }
 
   @override
@@ -468,7 +506,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 height: 8,
                               ),
                               Container(
-                                height: 50,
+                                height: 40,
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
@@ -477,8 +515,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                           index < shiftTimeOfDoctorList.length;
                                           index++)
                                         GestureDetector(
-                                          onTap: () => onShiftSelect(
-                                              shiftTimeOfDoctorList[index]),
+                                          onTap: () {
+                                            onShiftSelect(
+                                                shiftTimeOfDoctorList[index],
+                                                index);
+                                          },
                                           child: Container(
                                             margin: EdgeInsets.fromLTRB(
                                                 1, 0, 10, 0),
@@ -505,6 +546,53 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                             child: Text(
                                                 '${shiftTimeOfDoctorList[index]}'),
                                           ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ]),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Booked Slots',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                height: 40,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      for (int index = 0;
+                                          index < bookedSlotsList.length;
+                                          index++)
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(1, 0, 10, 0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              12, 10, 12, 10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white70,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                spreadRadius: 1,
+                                                blurRadius: 2,
+                                                offset: Offset(0, 1),
+                                              ),
+                                            ],
+                                          ),
+                                          child:
+                                              Text('${bookedSlotsList[index]}'),
                                         ),
                                     ],
                                   ),
@@ -638,16 +726,22 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     SizedBox(
                       width: 16,
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(37, 94, 102, 1),
-                          border: Border.all(
-                              width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
+                    GestureDetector(
+                      onTap: () {
+                        saveAppointment();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(37, 94, 102, 1),
+                            border: Border.all(
+                                width: 1,
+                                color: Color.fromRGBO(37, 94, 102, 1)),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          'Save',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
                       ),
                     )
                   ],
