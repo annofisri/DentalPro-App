@@ -1,11 +1,11 @@
 import 'package:dental/pages/calendar.dart';
+import 'package:dental/services/appointment.service.dart';
 import 'package:dental/services/details.service.dart';
 import 'package:dental/services/dropdownService.dart';
 import 'package:dental/services/holiday.service.dart';
 import 'package:dental/services/util.services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +27,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var showNextPage = false;
   var selectedPatient;
   var selectedDoctor;
+  var selectedTreatment;
   var shiftOfDoctorList = [];
   var shiftTimeOfDoctorList = [];
   var bookedSlotsList = [];
@@ -144,7 +145,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   onTreatmentSelect(tempTreatment) async {
-    print(tempTreatment);
     treatment.text = '${tempTreatment['name']}';
 
     var data =
@@ -152,6 +152,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             null;
 
     if (data != null) {
+      selectedTreatment = data;
       treatment_time.text = '${data['duration'].toInt()}';
       buffer_time.text = '${data['bufferTime'].toInt()}';
       total_treatment_time.text =
@@ -170,14 +171,12 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
   onShiftSelect(shift, index) {
     bookedSlotsList = [];
-    print('tes3t');
     setState(() {
       selectedShiftTimeOfDoctor = shift;
       shiftOfDoctorList[index]['booked_slots'].forEach((slot) {
         bookedSlotsList.add(
             '${UtilService().timeConverter(slot['start_time'])} - ${UtilService().timeConverter(slot['end_time'])}');
-        print(bookedSlotsList);
-        print('test');
+        // print(bookedSlotsList);
       });
     });
   }
@@ -285,6 +284,84 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         ),
       );
       return;
+    }
+
+    if (selectedShiftTimeOfDoctor == '') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a Shift Time!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    if (appointment_from_time.text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment Time is required!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    addAppointment();
+  }
+
+  String convert12HourTo24Hour(String time12Hour) {
+    DateFormat inputFormat = DateFormat('h:mm a', 'en_US');
+    DateFormat outputFormat = DateFormat('HH:mm');
+    DateTime dateTime = inputFormat.parse(time12Hour);
+    return outputFormat.format(dateTime);
+  }
+
+  addAppointment() async {
+    var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
+
+    print(appointment_from_time.text);
+    print(appointment_to.text);
+
+    String modifiedStartTime =
+        convert12HourTo24Hour(appointment_from_time.text);
+    String modifiedEndTime = convert12HourTo24Hour(appointment_to.text);
+    var appointmentData = {
+      "patient_id": selectedPatient['id'],
+      "chief_problem": chief_problem.text,
+      "treatment_id": selectedTreatment['id'],
+      "treatment_time": selectedTreatment['duration'],
+      "buffer_time": selectedTreatment['bufferTime'],
+      "note": note.text,
+      "appointment_date": modifiedDay,
+      "doctor_id": selectedDoctor['id'],
+      "start_time": modifiedStartTime,
+      "end_time": modifiedEndTime
+    };
+
+    print(appointmentData);
+
+    var res = await AppointmentService().addAppointment(appointmentData);
+
+    if (res['title'] == 'Success' && res['http_status'] == 200) {
+      res['messages'].forEach((message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${message['message']}'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add Appoinrment!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
