@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:session_storage/session_storage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final session = SessionStorage();
   Notificationservice notificationservice = Notificationservice();
   var notificationData = [];
   var dashboardData = [];
@@ -30,9 +32,12 @@ class _HomePageState extends State<HomePage> {
 
     checkPermission();
 
-    getNotifications();
+    if (session['showNotification'] == null) {
+      getNotifications();
 
-    showNotification();
+      showNotification();
+      session['showNotification'] = 'shown';
+    }
 
     getNext7DaysFormatted();
   }
