@@ -100,13 +100,6 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  gotToAddAppointmentPage() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => AddAppointmentPage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -409,19 +402,6 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
       drawer: NavDrawer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => gotToAddAppointmentPage(),
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Color.fromRGBO(54, 135, 147, 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              30.0), // Set border radius for rounded shape
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
