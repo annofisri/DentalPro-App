@@ -88,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
         "userId": data['user_information']['id'],
         "userName": username.text,
         "name": data['user_information']['name'],
+        "title": data['user_information']['title'],
         "image": userImage,
         "permissions": data['user_information']['operations']
       };

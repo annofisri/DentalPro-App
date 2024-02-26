@@ -1,14 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:dental/components/drawer.dart';
 import 'package:dental/pages/notification.dart';
 import 'package:dental/services/appointment.service.dart';
+import 'package:dental/services/details.service.dart';
 import 'package:dental/services/notification.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:session_storage/session_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,16 +25,19 @@ class _HomePageState extends State<HomePage> {
   final session = SessionStorage();
   Notificationservice notificationservice = Notificationservice();
   var notificationData = [];
-  var dashboardData = [];
+  var dashboardData = null;
   var appointmentData = [];
   var next7Days = [];
   String selectedDay = '';
+  var userInfo = null;
 
   @override
   void initState() {
     super.initState();
 
     checkPermission();
+
+    getUserInfo();
 
     if (session['showNotification'] == null) {
       getNotifications();
@@ -39,7 +46,37 @@ class _HomePageState extends State<HomePage> {
       session['showNotification'] = 'shown';
     }
 
+    getDashboardDTO();
+
     getNext7DaysFormatted();
+  }
+
+  getDashboardDTO() async {
+    var data = await DetailService().getDasahboardDTO();
+    setState(() {
+      dashboardData = data;
+    });
+  }
+
+  getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? userList = prefs.getStringList('userList') ?? [];
+    String? title;
+    String? name;
+    String? user_id;
+    for (String userInfoString in userList) {
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      if (userInfo['active'] == true) {
+        title = userInfo['title'];
+        name = userInfo['name'];
+        user_id = userInfo['user_id'];
+        break;
+      }
+    }
+
+    setState(() {
+      userInfo = {'title': title, 'name': name, 'user_id': user_id};
+    });
   }
 
   void showNotification() async {
@@ -53,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getNotifications() async {
-    var data = await Notificationservice().getNotifications() ?? {};
+    var data = await Notificationservice().getNotifications() ?? null;
     setState(() {
       notificationData = data;
     });
@@ -188,121 +225,133 @@ class _HomePageState extends State<HomePage> {
             Container(
                 margin: EdgeInsets.all(10),
                 child: Text(
-                  'Welcome, Dr.Nischal Shrestha',
+                  userInfo != null
+                      ? 'Welcome, ${userInfo['title'] ?? ''} ${userInfo['name']}'
+                      : '',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 )),
-            Card(
-                color: Colors.white,
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+            dashboardData != null
+                ? Card(
+                    color: Colors.white,
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                color: Color(0xFF368793)),
-                            child: Icon(
-                              Icons.calendar_month,
-                              size: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
                             children: [
-                              Text(
-                                '10',
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                    color: Color(0xFF368793)),
+                                child: Icon(
+                                  Icons.calendar_month,
+                                  size: 24,
+                                  color: Colors.white,
+                                ),
                               ),
-                              Text(
-                                'Total',
-                                style: TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${dashboardData['total_patients'] ?? ''}",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               )
                             ],
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                color: Color(0xFF368793)),
-                            child: Icon(
-                              Icons.calendar_month,
-                              size: 24,
-                              color: Colors.white,
-                            ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
                             children: [
-                              Text(
-                                '10',
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                    color: Color(0xFF368793)),
+                                child: Icon(
+                                  Icons.calendar_month,
+                                  size: 24,
+                                  color: Colors.white,
+                                ),
                               ),
-                              Text(
-                                'Completed',
-                                style: TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${dashboardData['treatment_done'] ?? ''}",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    'Completed',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               )
                             ],
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                color: Color(0xFF368793)),
-                            child: Icon(
-                              Icons.calendar_month,
-                              size: 24,
-                              color: Colors.white,
-                            ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Row(
                             children: [
-                              Text(
-                                '10',
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w700),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                    color: Color(0xFF368793)),
+                                child: Icon(
+                                  Icons.calendar_month,
+                                  size: 24,
+                                  color: Colors.white,
+                                ),
                               ),
-                              Text(
-                                'Cancel',
-                                style: TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w400),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${dashboardData['total_patients'] ?? ''}",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
                               )
                             ],
-                          )
+                          ),
                         ],
                       ),
-                    ],
+                    ))
+                : SizedBox(
+                    height: 0,
                   ),
-                )),
             Container(
               margin: EdgeInsets.all(10),
               child: Text(
