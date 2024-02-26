@@ -71,6 +71,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     getMonthHolidayData();
     getEvents();
     getAvailableDoctors();
+    checkHoliday();
   }
 
   getMonthHolidayData() async {
@@ -478,6 +479,22 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     }
   }
 
+  checkHoliday() {
+    var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
+    print(monthHolidayData);
+    monthHolidayData.forEach((holiday) {
+      if (modifiedDay == holiday) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Appointment is set on Holiday!'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -559,6 +576,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                     _focusedDay = focusedDay;
 
                                     getAvailableDoctors();
+                                    checkHoliday();
                                   });
                                 },
                                 selectedDayPredicate: (DateTime date) {
