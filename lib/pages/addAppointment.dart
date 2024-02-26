@@ -32,6 +32,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   var shiftTimeOfDoctorList = [];
   var bookedSlotsList = [];
   var selectedShiftTimeOfDoctor = '';
+  var shiftSelectIndex = null;
 
   final TextEditingController patient_name = TextEditingController();
   final TextEditingController patient_code = TextEditingController();
@@ -133,6 +134,9 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     doctor_name.text = doctor['name'];
     shiftTimeOfDoctorList = [];
     shiftOfDoctorList = [];
+    bookedSlotsList = [];
+
+    print(doctor);
 
     setState(() {
       if (doctor['shifts'].length > 0) {
@@ -189,6 +193,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   onShiftSelect(shift, index) {
+    shiftSelectIndex = index;
     bookedSlotsList = [];
     setState(() {
       selectedShiftTimeOfDoctor = shift;
@@ -436,7 +441,53 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       }
     }
 
-    return valid && !validSlot;
+    // break time validation
+
+    var validBreak = false;
+    var breakStartTime = convert24HourTo12Hour(
+        shiftOfDoctorList[shiftSelectIndex]['break_start_time']);
+    var breakEndTime = convert24HourTo12Hour(
+        shiftOfDoctorList[shiftSelectIndex]['break_stop_time']);
+    validBreak = checkSlotRange(
+        appointment_from_time.text, '${breakStartTime} - ${breakEndTime}');
+    if (validBreak) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment falls under brteak time!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+    validBreak = checkSlotRange(
+        appointment_to.text, '${breakStartTime} - ${breakEndTime}');
+    if (validBreak) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment falls under brteak time!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+
+    return valid && !validSlot && !validBreak;
+  }
+
+  String convert24HourTo12Hour(String time24Hour) {
+    DateFormat inputFormat = DateFormat('HH:mm:ss');
+    DateFormat outputFormat = DateFormat('h:mm a');
+
+    try {
+      // Trim the input string to remove leading and trailing spaces
+      time24Hour = time24Hour.trim();
+
+      DateTime dateTime = inputFormat.parseStrict(time24Hour);
+      return outputFormat.format(dateTime);
+    } catch (e) {
+      print("Error parsing time: $e");
+      return "Invalid Time";
+    }
   }
 
   checkRange(inputTime, timeRangeStr) {
