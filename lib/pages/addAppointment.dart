@@ -308,7 +308,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       return;
     }
 
-    addAppointment();
+    var valid = validateShiftAndBookedSlots();
+
+    if (valid) {
+      addAppointment();
+    }
   }
 
   String convert12HourTo24Hour(String time12Hour) {
@@ -320,9 +324,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
   addAppointment() async {
     var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
-
-    print(appointment_from_time.text);
-    print(appointment_to.text);
 
     String modifiedStartTime =
         convert12HourTo24Hour(appointment_from_time.text);
@@ -339,8 +340,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       "start_time": modifiedStartTime,
       "end_time": modifiedEndTime
     };
-
-    print(appointmentData);
 
     var res = await AppointmentService().addAppointment(appointmentData);
 
@@ -362,6 +361,61 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           behavior: SnackBarBehavior.floating,
         ),
       );
+    }
+  }
+
+  bool validateShiftAndBookedSlots() {
+    var valid = true;
+
+    print(selectedShiftTimeOfDoctor);
+    print(appointment_from_time.text);
+    print(appointment_to.text);
+
+    // Shift Validation
+    valid = checkRange(appointment_from_time.text, selectedShiftTimeOfDoctor);
+    if (!valid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment Time does not fall under Shift Time!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return valid;
+    }
+    valid = checkRange(appointment_to.text, selectedShiftTimeOfDoctor);
+    if (!valid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Appointment Time does not fall under Shift Time!'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return valid;
+    }
+
+    return valid;
+  }
+
+  checkRange(inputTime, timeRangeStr) {
+    List<String> timeParts = timeRangeStr.split(" - ");
+    String startTimeStr = timeParts[0];
+    String endTimeStr = timeParts[1];
+
+    // Convert input and range times to DateTime objects
+    DateTime inputTimeObj = DateFormat("h:mm a").parse(inputTime);
+    DateTime startTimeObj = DateFormat("h:mm a").parse(startTimeStr);
+    DateTime endTimeObj = DateFormat("h:mm a").parse(endTimeStr);
+
+    // Check if input time falls within the range
+    if (inputTimeObj.isAtSameMomentAs(startTimeObj) ||
+        inputTimeObj.isAtSameMomentAs(endTimeObj) ||
+        (inputTimeObj.isAfter(startTimeObj) &&
+            inputTimeObj.isBefore(endTimeObj))) {
+      return true;
+    } else {
+      return false;
     }
   }
 
