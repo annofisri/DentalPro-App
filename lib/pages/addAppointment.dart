@@ -151,7 +151,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
 
     var data = await DetailService().checkUserLeave(modifiedDay, id);
-    print(data);
+
     data['messages'].forEach((message) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -481,7 +481,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
   checkHoliday() {
     var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
-    print(monthHolidayData);
+
     monthHolidayData.forEach((holiday) {
       if (modifiedDay == holiday) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -760,53 +760,61 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                                 ),
                               )
                             ]),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Booked Slots',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Container(
-                                height: 40,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      for (int index = 0;
-                                          index < bookedSlotsList.length;
-                                          index++)
-                                        Container(
-                                          margin:
-                                              EdgeInsets.fromLTRB(1, 0, 10, 0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              12, 10, 12, 10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white70,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.1),
-                                                spreadRadius: 1,
-                                                blurRadius: 2,
-                                                offset: Offset(0, 1),
-                                              ),
-                                            ],
-                                          ),
-                                          child:
-                                              Text('${bookedSlotsList[index]}'),
-                                        ),
-                                    ],
-                                  ),
-                                ),
+                        bookedSlotsList.length > 0
+                            ? SizedBox(
+                                height: 12,
                               )
-                            ]),
+                            : SizedBox(
+                                height: 0,
+                              ),
+                        bookedSlotsList.length > 0
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Text(
+                                      'Booked Slots',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: [
+                                            for (int index = 0;
+                                                index < bookedSlotsList.length;
+                                                index++)
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    1, 0, 10, 0),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    12, 10, 12, 10),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white70,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.1),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 2,
+                                                      offset: Offset(0, 1),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Text(
+                                                    '${bookedSlotsList[index]}'),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ])
+                            : SizedBox(
+                                height: 0,
+                              ),
                         SizedBox(
                           height: 12,
                         ),
