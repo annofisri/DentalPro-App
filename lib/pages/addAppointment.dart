@@ -142,6 +142,24 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         });
       }
     });
+
+    checkDoctorLeave(doctor['id']);
+  }
+
+  checkDoctorLeave(id) async {
+    var modifiedDay = DateFormat('yyyy-MM-dd').format(_selectedDay);
+
+    var data = await DetailService().checkUserLeave(modifiedDay, id);
+    print(data);
+    data['messages'].forEach((message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Info: ${message['message']}!'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    });
   }
 
   onTreatmentSelect(tempTreatment) async {
@@ -215,7 +233,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   validateFirstPage() {
-    print(patient_name.text);
     if (patient_name.text.length == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -392,9 +409,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     }
 
     // Booked Slots Validation
-    print(bookedSlotsList);
-    print(appointment_from_time.text);
-    print(appointment_to.text);
     var validSlot = false;
     for (String slot in bookedSlotsList) {
       validSlot = checkSlotRange(appointment_from_time.text, slot);
