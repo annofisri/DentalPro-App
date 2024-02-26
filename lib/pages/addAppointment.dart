@@ -367,10 +367,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   bool validateShiftAndBookedSlots() {
     var valid = true;
 
-    print(selectedShiftTimeOfDoctor);
-    print(appointment_from_time.text);
-    print(appointment_to.text);
-
     // Shift Validation
     valid = checkRange(appointment_from_time.text, selectedShiftTimeOfDoctor);
     if (!valid) {
@@ -395,7 +391,37 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       return valid;
     }
 
-    return valid;
+    // Booked Slots Validation
+    print(bookedSlotsList);
+    print(appointment_from_time.text);
+    print(appointment_to.text);
+    var validSlot = false;
+    for (String slot in bookedSlotsList) {
+      validSlot = checkSlotRange(appointment_from_time.text, slot);
+      if (validSlot) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please check booked slots!'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        break;
+      }
+      validSlot = checkSlotRange(appointment_to.text, slot);
+      if (validSlot) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please check booked slots!'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        break;
+      }
+    }
+
+    return valid && !validSlot;
   }
 
   checkRange(inputTime, timeRangeStr) {
@@ -410,9 +436,28 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
     // Check if input time falls within the range
     if (inputTimeObj.isAtSameMomentAs(startTimeObj) ||
-        inputTimeObj.isAtSameMomentAs(endTimeObj) ||
         (inputTimeObj.isAfter(startTimeObj) &&
+                inputTimeObj.isAtSameMomentAs(endTimeObj) ||
             inputTimeObj.isBefore(endTimeObj))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  checkSlotRange(inputTime, timeRangeStr) {
+    List<String> timeParts = timeRangeStr.split(" - ");
+    String startTimeStr = timeParts[0];
+    String endTimeStr = timeParts[1];
+
+    // Convert input and range times to DateTime objects
+    DateTime inputTimeObj = DateFormat("h:mm a").parse(inputTime);
+    DateTime startTimeObj = DateFormat("h:mm a").parse(startTimeStr);
+    DateTime endTimeObj = DateFormat("h:mm a").parse(endTimeStr);
+
+    // Check if input time falls within the range
+    if ((inputTimeObj.isAfter(startTimeObj) &&
+        inputTimeObj.isBefore(endTimeObj))) {
       return true;
     } else {
       return false;
