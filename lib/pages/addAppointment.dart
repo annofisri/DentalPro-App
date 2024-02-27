@@ -91,9 +91,14 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       'name': widget.appointment['treatment_name'],
       'id': widget.appointment['treatment_id']
     });
+    note.text = widget.appointment['note'] ?? '';
+    print(_selectedDay);
+    var modifiedDay = DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS').format(
+        DateTime.parse(
+            '${widget.appointment['appointment_date']} 00:00:00.000'));
 
-    // _selectedDay = widget.appointment['appointment_date'];
-    // _focusedDay = widget.appointment['appointment_date'];
+    _selectedDay = DateTime.parse(modifiedDay);
+    _focusedDay = DateTime.parse(modifiedDay);
   }
 
   getMonthHolidayData() async {
