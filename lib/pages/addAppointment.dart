@@ -80,19 +80,21 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   }
 
   populateForm() {
-    print(widget.appointment);
     patient_name.text = widget.appointment['patient_name'];
     patient_code.text = widget.appointment['patient_code'];
     contact_no.text = widget.appointment['contact_number'];
 
     chief_problem.text = widget.appointment['chief_problem'];
 
+    appointment_from_time.text =
+        UtilService().timeConverter(widget.appointment['start_time']);
+
     onTreatmentSelect({
       'name': widget.appointment['treatment_name'],
       'id': widget.appointment['treatment_id']
     });
     note.text = widget.appointment['note'] ?? '';
-    print(_selectedDay);
+
     var modifiedDay = DateFormat('yyyy-MM-dd HH:mm:ss.SSSSSS').format(
         DateTime.parse(
             '${widget.appointment['appointment_date']} 00:00:00.000'));
@@ -169,8 +171,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     shiftOfDoctorList = [];
     bookedSlotsList = [];
 
-    print(doctor);
-
     setState(() {
       if (doctor['shifts'].length > 0) {
         doctor['shifts'].forEach((var shift) {
@@ -206,14 +206,35 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var data =
         await DetailService().getTreatmentDetailsById(tempTreatment['id']) ??
             null;
-    print(data);
+
     if (data != null) {
       selectedTreatment = data;
       treatment_time.text = '${data['duration'].toInt()}';
       buffer_time.text = '${data['bufferTime'].toInt()}';
       total_treatment_time.text =
           '${(data['duration'] + data['bufferTime']).toInt()}';
+
+      print(appointment_from_time.text);
+      print(total_treatment_time.text);
+
+      final newTime = addMinutesToTimeString(
+          appointment_from_time.text, int.tryParse(total_treatment_time.text));
+      this.appointment_to.text = newTime;
     }
+  }
+
+  String addMinutesToTimeString(String timeString, var min) {
+    // Parse the time string to a DateTime object
+    final timeFormat = DateFormat("h:mm a");
+    final time = timeFormat.parse(timeString);
+
+    // Add 30 minutes to the DateTime object
+    final addedTime = time.add(Duration(minutes: min));
+
+    // Format the resulting DateTime object back to a string
+    final formattedTime = timeFormat.format(addedTime);
+
+    return formattedTime;
   }
 
   getAvailableDoctors() async {
@@ -223,6 +244,14 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         await DropDownService().getAvailableDoctorByDate(modifiedDay) ?? [];
 
     availableDoctorList = data;
+
+    if (widget.appointment != null) {
+      availableDoctorList.forEach((doctor) {
+        if (doctor['id'] == widget.appointment['doctor_id']) {
+          onDoctorSelect(doctor);
+        }
+      });
+    }
   }
 
   onShiftSelect(shift, index) {
