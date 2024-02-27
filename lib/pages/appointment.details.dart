@@ -41,6 +41,24 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
         ),
         iconTheme: IconThemeData(color: Colors.white),
         elevation: 0,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              // Handle menu item selection
+              print('Selected: $result');
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                value: 'option1',
+                child: Text('Edit'),
+              ),
+              PopupMenuItem<String>(
+                value: 'option2',
+                child: Text('Reschedule'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView(children: [
         Container(
@@ -431,21 +449,6 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
               child: Text(
                 'Cancel Appt',
                 style: TextStyle(fontSize: 14, color: Colors.red),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 1, color: Color.fromRGBO(37, 94, 102, 1)),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              child: Text(
-                'Re-Schedule',
-                style: TextStyle(
-                    fontSize: 14, color: Color.fromRGBO(37, 94, 102, 1)),
               ),
             ),
             SizedBox(
