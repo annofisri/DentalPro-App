@@ -17,7 +17,8 @@ class Event {
 }
 
 class AddAppointmentPage extends StatefulWidget {
-  const AddAppointmentPage({super.key});
+  final appointment;
+  const AddAppointmentPage(this.appointment, {super.key});
 
   @override
   State<AddAppointmentPage> createState() => _AddAppointmentPageState();
@@ -73,6 +74,26 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     getEvents();
     getAvailableDoctors();
     checkHoliday();
+    if (widget.appointment != null) {
+      populateForm();
+    }
+  }
+
+  populateForm() {
+    print(widget.appointment);
+    patient_name.text = widget.appointment['patient_name'];
+    patient_code.text = widget.appointment['patient_code'];
+    contact_no.text = widget.appointment['contact_number'];
+
+    chief_problem.text = widget.appointment['chief_problem'];
+
+    onTreatmentSelect({
+      'name': widget.appointment['treatment_name'],
+      'id': widget.appointment['treatment_id']
+    });
+
+    // _selectedDay = widget.appointment['appointment_date'];
+    // _focusedDay = widget.appointment['appointment_date'];
   }
 
   getMonthHolidayData() async {
@@ -99,6 +120,13 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var data = await DropDownService().getPatientDropDownList('') ?? [];
     setState(() {
       patientList = data;
+      if (widget.appointment != null) {
+        patientList.forEach((patient) {
+          if (patient['id'] == widget.appointment['patient_id']) {
+            address.text = patient['address'];
+          }
+        });
+      }
     });
   }
 
@@ -173,7 +201,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
     var data =
         await DetailService().getTreatmentDetailsById(tempTreatment['id']) ??
             null;
-
+    print(data);
     if (data != null) {
       selectedTreatment = data;
       treatment_time.text = '${data['duration'].toInt()}';

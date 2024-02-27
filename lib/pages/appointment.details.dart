@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dental/components/drawer.dart';
+import 'package:dental/pages/addAppointment.dart';
 import 'package:dental/pages/patient.details.dart';
 import 'package:dental/services/drawer.service.dart';
 import 'package:dental/services/util.services.dart';
@@ -45,15 +46,21 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
           PopupMenuButton<String>(
             onSelected: (String result) {
               // Handle menu item selection
-              print('Selected: $result');
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AddAppointmentPage(widget.appointment)),
+              );
             },
             itemBuilder: (BuildContext context) => [
               PopupMenuItem<String>(
-                value: 'option1',
+                value: 'edit',
                 child: Text('Edit'),
               ),
               PopupMenuItem<String>(
-                value: 'option2',
+                value: 'reschedule',
                 child: Text('Reschedule'),
               ),
             ],

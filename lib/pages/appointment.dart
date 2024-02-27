@@ -58,7 +58,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   goToAddAppointmentPage() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AddAppointmentPage()),
+      MaterialPageRoute(builder: (context) => AddAppointmentPage(null)),
     );
   }
 
